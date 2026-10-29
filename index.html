@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dompet Bersama & Target Nikah - Kamu & Calon Istri</title>
+    <title>Dompet Bersama Firdaus & Viranti</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,17 +20,17 @@
                 <h1 class="text-xl font-bold text-rose-700 flex items-center gap-2">
                     💍 Tabungan & Keuangan Nikah
                 </h1>
-                <p class="text-xs text-slate-500">Rencana Bersama Menuju Pelaminan</p>
+                <p class="text-xs text-slate-500">Firdaus Almubin & Viranti</p>
             </div>
             
             <!-- Profil Switcher -->
             <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl">
                 <span class="text-xs font-semibold px-2 text-slate-500">Masuk Sebagai:</span>
                 <button onclick="switchUser('pria')" id="btn-pria" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm">
-                    🤵 Saya (Pria)
+                    🤵 Firdaus Almubin
                 </button>
                 <button onclick="switchUser('wanita')" id="btn-wanita" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all">
-                    👰 Calon Istri
+                    👰 Viranti
                 </button>
             </div>
         </div>
@@ -42,8 +42,8 @@
         <div class="bg-gradient-to-r from-rose-600 to-pink-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
             <div class="absolute right-[-20px] bottom-[-20px] text-white/10 text-9xl font-extrabold select-none">💍</div>
             <div class="relative z-10">
-                <span id="active-user-badge" class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Dompet Pria</span>
-                <h2 id="active-user-title" class="text-2xl font-bold mt-2">Halo, Calon Pengantin Pria!</h2>
+                <span id="active-user-badge" class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Dompet Firdaus</span>
+                <h2 id="active-user-title" class="text-2xl font-bold mt-2">Halo, Firdaus Almubin!</h2>
                 <p class="text-rose-100 text-sm mt-1">Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.</p>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/20">
@@ -149,7 +149,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h3 class="font-bold text-base text-slate-800">📜 Riwayat Pengeluaran Berdua</h3>
-                        <p class="text-xs text-slate-500">Transparan: Kamu & Calon Istri bisa saling melihat</p>
+                        <p class="text-xs text-slate-500">Transparan: Firdaus & Viranti bisa saling melihat</p>
                     </div>
                     <button onclick="resetData()" class="text-xs text-rose-500 hover:underline font-semibold">Reset Data</button>
                 </div>
@@ -192,9 +192,9 @@
 
     <script>
         // State Aplikasi
-        let currentUser = 'pria'; // 'pria' atau 'wanita'
+        let currentUser = 'pria'; // 'pria' (Firdaus) atau 'wanita' (Viranti)
         
-        let appData = JSON.parse(localStorage.getItem('keuangan_nikah_data')) || {
+        let appData = JSON.parse(localStorage.getItem('keuangan_nikah_data_fv')) || {
             pria: {
                 expenses: [],
                 tabunganWajib: true
@@ -219,14 +219,14 @@
             if(user === 'pria') {
                 btnPria.className = "px-4 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-rose-600 text-white";
                 btnWanita.className = "px-4 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
-                badge.innerText = "Dompet Pria";
-                title.innerText = "Halo, Calon Pengantin Pria!";
+                badge.innerText = "Dompet Firdaus";
+                title.innerText = "Halo, Firdaus Almubin!";
                 submitBtn.className = "w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-200";
             } else {
                 btnWanita.className = "px-4 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-pink-600 text-white";
                 btnPria.className = "px-4 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
-                badge.innerText = "Dompet Wanita";
-                title.innerText = "Halo, Calon Pengantin Wanita!";
+                badge.innerText = "Dompet Viranti";
+                title.innerText = "Halo, Viranti!";
                 submitBtn.className = "w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-pink-200";
             }
             updateUI();
@@ -285,6 +285,13 @@
             saveAndRender();
         }
 
+        function resetData() {
+            if(confirm("Yakin ingin mereset seluruh data catatan?")) {
+                localStorage.removeItem('keuangan_nikah_data_fv');
+                location.reload();
+            }
+        }
+
         function tambahTabunganModal() {
             document.getElementById('modal-tabungan').classList.remove('hidden');
             document.getElementById('modal-tabungan').classList.add('flex');
@@ -314,12 +321,11 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('keuangan_nikah_data', JSON.stringify(appData));
+            localStorage.setItem('keuangan_nikah_data_fv', JSON.stringify(appData));
             updateUI();
         }
 
         function updateUI() {
-            // Hitung sisa makan aktif
             const totalKeluarPria = appData.pria.expenses.reduce((sum, item) => sum + item.amount, 0);
             const totalKeluarWanita = appData.wanita.expenses.reduce((sum, item) => sum + item.amount, 0);
 
@@ -332,26 +338,22 @@
                 document.getElementById('sisa-makan-display').innerText = formatRupiah(sisaWanita);
             }
 
-            // Hitung Total Tabungan Bersama
             const totalTabungan = appData.tabunganBersamaHistory.reduce((sum, item) => sum + item.amount, 0);
             document.getElementById('total-tabungan-bersama').innerText = formatRupiah(totalTabungan);
 
-            // Progress Bar (Max 50 Juta)
             let percent = (totalTabungan / 50000000) * 100;
             if(percent > 100) percent = 100;
             document.getElementById('progress-bar').style.width = percent + '%';
 
-            // Milestone Status Update
             updateMilestoneStatus(5000000, 'ms-5', totalTabungan);
             updateMilestoneStatus(10000000, 'ms-10', totalTabungan);
             updateMilestoneStatus(20000000, 'ms-20', totalTabungan);
             updateMilestoneStatus(30000000, 'ms-30', totalTabungan);
             updateMilestoneStatus(50000000, 'ms-50', totalTabungan);
 
-            // Render Gabungan Tabel Transaksi
             const allTx = [
-                ...appData.pria.expenses.map(i => ({...i, owner: 'Pria'})),
-                ...appData.wanita.expenses.map(i => ({...i, owner: 'Wanita'}))
+                ...appData.pria.expenses.map(i => ({...i, owner: 'Firdaus'})),
+                ...appData.wanita.expenses.map(i => ({...i, owner: 'Viranti'}))
             ].sort((a,b) => b.id - a.id);
 
             const tbody = document.getElementById('transaction-list');
@@ -363,8 +365,8 @@
             }
 
             allTx.forEach(tx => {
-                let badgeOwner = tx.owner === 'Pria' ? '<span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full">🤵 Pria</span>' : '<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">👰 Wanita</span>';
-                let canDelete = tx.owner.toLowerCase() === currentUser;
+                let badgeOwner = tx.owner === 'Firdaus' ? '<span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full">🤵 Firdaus</span>' : '<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">👰 Viranti</span>';
+                let canDelete = (tx.owner === 'Firdaus' && currentUser === 'pria') || (tx.owner === 'Viranti' && currentUser === 'wanita');
 
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-50 hover:bg-slate-50/50 transition-all text-xs";
@@ -374,7 +376,7 @@
                     <td class="py-3 font-medium text-slate-700">${tx.desc}</td>
                     <td class="py-3 text-right font-bold text-rose-600">- ${formatRupiah(tx.amount)}</td>
                     <td class="py-3 text-center">
-                        ${canDelete ? `<button onclick="deleteExpense('${tx.owner.toLowerCase()}', ${tx.id})" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>` : `<span class="text-slate-300 text-[10px] italic">Terkunci</span>`}
+                        ${canDelete ? `<button onclick="deleteExpense('${tx.owner === 'Firdaus' ? 'pria' : 'wanita'}', ${tx.id})" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>` : `<span class="text-slate-300 text-[10px] italic">Terkunci</span>`}
                     </td>
                 `;
                 tbody.appendChild(tr);
