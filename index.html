@@ -20,7 +20,7 @@
                 <h1 class="text-xl font-bold text-rose-700 flex items-center gap-2">
                     💍 Tabungan & Keuangan Nikah
                 </h1>
-                <p class="text-xs text-slate-500">Firdaus Almubin & Viranti</p>
+                <p class="text-xs text-slate-500">Firdaus Almubin & Viranti (Live Sync)</p>
             </div>
             
             <!-- Profil Switcher -->
@@ -52,8 +52,8 @@
                         <p id="sisa-makan-display" class="text-2xl font-extrabold mt-0.5">Rp 1.500.000</p>
                     </div>
                     <div>
-                        <p class="text-xs text-rose-200">Tabungan Wajib Bulan Ini (Rp 500rb)</p>
-                        <p id="tabungan-wajib-display" class="text-lg font-bold mt-0.5 text-emerald-300">✔ Terhubung Bersama</p>
+                        <p class="text-xs text-rose-200">Status Sinkronisasi Cloud</p>
+                        <p class="text-lg font-bold mt-0.5 text-emerald-300">🟢 Terhubung Real-time</p>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                             </tr>
                         </thead>
                         <tbody id="tabungan-history-list" class="text-xs divide-y divide-slate-50">
-                            <!-- Data setoran masuk otomatis disini -->
+                            <tr><td colspan="4" class="text-center py-4 text-slate-400 text-xs">Memuat data...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -187,7 +187,7 @@
                             </tr>
                         </thead>
                         <tbody id="transaction-list" class="text-sm divide-y divide-slate-50">
-                            <!-- Data akan masuk otomatis disini -->
+                            <tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs">Memuat data...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -211,18 +211,49 @@
         </div>
     </div>
 
-    <script>
-        let currentUser = 'pria'; // 'pria' (Firdaus) atau 'wanita' (Viranti)
-        
-        let appData = JSON.parse(localStorage.getItem('keuangan_nikah_data_fv')) || {
-            pria: { expenses: [] },
-            wanita: { expenses: [] },
-            tabunganBersamaHistory: []
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Konfigurasi Firebase Kamu[cite: 9]
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8QRhbrJsIQPoCZ4_n24mGOBjG-MusjDI",
+            authDomain: "keuangan-nikah.firebaseapp.com",
+            projectId: "keuangan-nikah",
+            storageBucket: "keuangan-nikah.firebasestorage.app",
+            messagingSenderId: "602194908980",
+            appId: "1:602194908980:web:b15d2e3fa711db187b761",
+            measurementId: "G-KLEGJBCFY6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentUser = 'pria'; 
+        let appData = {
+            pria: { expenses: {} },
+            wanita: { expenses: {} },
+            tabunganBersamaHistory: {}
         };
 
         const JATAH_MAKAN_BULANAN = 1500000;
 
-        function switchUser(user) {
+        // Listener Realtime dari Firebase
+        const dbRef = ref(db, 'keuangan_nikah_data');
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                appData = {
+                    pria: { expenses: data.pria?.expenses || {} },
+                    wanita: { expenses: data.wanita?.expenses || {} },
+                    tabunganBersamaHistory: data.tabunganBersamaHistory || {}
+                };
+            }
+            updateUI();
+        });
+
+        window.switchUser = function(user) {
             currentUser = user;
             const btnPria = document.getElementById('btn-pria');
             const btnWanita = document.getElementById('btn-wanita');
@@ -250,7 +281,7 @@
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
         }
 
-        function formatRupiahInput(input) {
+        window.formatRupiahInput = function(input) {
             let value = input.value.replace(/[^,\d]/g, '').toString();
             let split = value.split(',');
             let sisa = split[0].length % 3;
@@ -267,7 +298,7 @@
             return parseInt(str.replace(/[^0-9]/g, '')) || 0;
         }
 
-        function addExpense(e) {
+        window.addExpense = function(e) {
             e.preventDefault();
             const amountStr = document.getElementById('amount').value;
             const desc = document.getElementById('description').value;
@@ -275,78 +306,71 @@
 
             if(amount <= 0) return;
 
-            const newTx = {
-                id: Date.now(),
+            const newTxRef = push(ref(db, `keuangan_nikah_data/${currentUser}/expenses`));
+            set(newTxRef, {
                 date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
-                user: currentUser,
                 desc: desc,
-                amount: amount
-            };
-
-            appData[currentUser].expenses.unshift(newTx);
-            saveAndRender();
+                amount: amount,
+                timestamp: Date.now()
+            });
 
             document.getElementById('amount').value = '';
             document.getElementById('description').value = '';
         }
 
-        function deleteExpense(user, id) {
+        window.deleteExpense = function(user, id) {
             if(user !== currentUser) {
                 alert("Kamu hanya bisa menghapus data milikmu sendiri demi privasi & kontrol masing-masing!");
                 return;
             }
-            appData[user].expenses = appData[user].expenses.filter(item => item.id !== id);
-            saveAndRender();
+            remove(ref(db, `keuangan_nikah_data/${user}/expenses/${id}`));
         }
 
-        function tambahTabunganModal() {
+        window.tambahTabunganModal = function() {
             document.getElementById('modal-tabungan').classList.remove('hidden');
             document.getElementById('modal-tabungan').classList.add('flex');
         }
 
-        function closeTabunganModal() {
+        window.closeTabunganModal = function() {
             document.getElementById('modal-tabungan').classList.remove('flex');
             document.getElementById('modal-tabungan').classList.add('hidden');
         }
 
-        function submitTabungan(e) {
+        window.submitTabungan = function(e) {
             e.preventDefault();
             const amountStr = document.getElementById('tabungan-amount').value;
             const amount = parseRupiah(amountStr);
             if(amount <= 0) return;
 
-            appData.tabunganBersamaHistory.unshift({
-                id: Date.now(),
+            const newTabunganRef = push(ref(db, 'keuangan_nikah_data/tabunganBersamaHistory'));
+            set(newTabunganRef, {
                 date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
                 user: currentUser,
-                amount: amount
+                amount: amount,
+                timestamp: Date.now()
             });
 
-            saveAndRender();
             closeTabunganModal();
             document.getElementById('tabungan-amount').value = '';
         }
 
-        function deleteTabungan(id) {
-            appData.tabunganBersamaHistory = appData.tabunganBersamaHistory.filter(item => item.id !== id);
-            saveAndRender();
+        window.deleteTabungan = function(id) {
+            remove(ref(db, `keuangan_nikah_data/tabunganBersamaHistory/${id}`));
         }
 
-        function resetData() {
-            if(confirm("Yakin ingin mereset seluruh data catatan?")) {
-                localStorage.removeItem('keuangan_nikah_data_fv');
-                location.reload();
+        window.resetData = function() {
+            if(confirm("Yakin ingin mereset seluruh data catatan bersama di cloud?")) {
+                set(ref(db, 'keuangan_nikah_data'), null);
             }
         }
 
-        function saveAndRender() {
-            localStorage.setItem('keuangan_nikah_data_fv', JSON.stringify(appData));
-            updateUI();
-        }
-
         function updateUI() {
-            const totalKeluarPria = appData.pria.expenses.reduce((sum, item) => sum + item.amount, 0);
-            const totalKeluarWanita = appData.wanita.expenses.reduce((sum, item) => sum + item.amount, 0);
+            const priaExpensesObj = appData.pria.expenses || {};
+            const wanitaExpensesObj = appData.wanita.expenses || {};
+            const tabunganObj = appData.tabunganBersamaHistory || {};
+
+            const totalKeluarPria = Object.values(priaExpensesObj).reduce((sum, item) => sum + item.amount, 0);
+            const totalKeluarWanita = Object.values(wanitaExpensesObj).reduce((sum, item) => sum + item.amount, 0);
 
             const sisaPria = JATAH_MAKAN_BULANAN - totalKeluarPria;
             const sisaWanita = JATAH_MAKAN_BULANAN - totalKeluarWanita;
@@ -357,8 +381,8 @@
                 document.getElementById('sisa-makan-display').innerText = formatRupiah(sisaWanita);
             }
 
-            // Total Tabungan Bersama
-            const totalTabungan = appData.tabunganBersamaHistory.reduce((sum, item) => sum + item.amount, 0);
+            const tabunganArr = Object.entries(tabunganObj).map(([id, val]) => ({ id, ...val }));
+            const totalTabungan = tabunganArr.reduce((sum, item) => sum + item.amount, 0);
             document.getElementById('total-tabungan-bersama').innerText = formatRupiah(totalTabungan);
 
             let percent = (totalTabungan / 50000000) * 100;
@@ -369,16 +393,16 @@
             updateMilestoneStatus(10000000, 'ms-10', totalTabungan);
             updateMilestoneStatus(20000000, 'ms-20', totalTabungan);
             updateMilestoneStatus(30000000, 'ms-30', totalTabungan);
-            updateMilestoneStatus(50000000, 'ms-50', totalTabungan);
+            updateMilementStatus50 = updateMilestoneStatus(50000000, 'ms-50', totalTabungan);
 
-            // Render Tabel Riwayat Setoran Tabungan
+            // Render Tabungan History
             const tabunganTbody = document.getElementById('tabungan-history-list');
             tabunganTbody.innerHTML = '';
 
-            if(appData.tabunganBersamaHistory.length === 0) {
+            if(tabunganArr.length === 0) {
                 tabunganTbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400 text-xs">Belum ada riwayat setoran tabungan.</td></tr>`;
             } else {
-                appData.tabunganBersamaHistory.forEach(item => {
+                tabunganArr.sort((a,b) => b.timestamp - a.timestamp).forEach(item => {
                     let penyetorBadge = item.user === 'pria' ? '<span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full">🤵 Firdaus</span>' : '<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">👰 Viranti</span>';
                     
                     let tr = document.createElement('tr');
@@ -388,18 +412,17 @@
                         <td class="py-2.5">${penyetorBadge}</td>
                         <td class="py-2.5 text-right font-bold text-emerald-600">+ ${formatRupiah(item.amount)}</td>
                         <td class="py-2.5 text-center">
-                            <button onclick="deleteTabungan(${item.id})" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>
+                            <button onclick="deleteTabungan('${item.id}')" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>
                         </td>
                     `;
                     tabunganTbody.appendChild(tr);
                 });
             }
 
-            // Render Tabel Pengeluaran Makan
-            const allTx = [
-                ...appData.pria.expenses.map(i => ({...i, owner: 'Firdaus'})),
-                ...appData.wanita.expenses.map(i => ({...i, owner: 'Viranti'}))
-            ].sort((a,b) => b.id - a.id);
+            // Render Transaksi Makan
+            const priaArr = Object.entries(priaExpensesObj).map(([id, val]) => ({ id, owner: 'Firdaus', userKey: 'pria', ...val }));
+            const wanitaArr = Object.entries(wanitaExpensesObj).map(([id, val]) => ({ id, owner: 'Viranti', userKey: 'wanita', ...val }));
+            const allTx = [...priaArr, ...wanitaArr].sort((a,b) => b.timestamp - a.timestamp);
 
             const tbody = document.getElementById('transaction-list');
             tbody.innerHTML = '';
@@ -411,7 +434,7 @@
 
             allTx.forEach(tx => {
                 let badgeOwner = tx.owner === 'Firdaus' ? '<span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full">🤵 Firdaus</span>' : '<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">👰 Viranti</span>';
-                let canDelete = (tx.owner === 'Firdaus' && currentUser === 'pria') || (tx.owner === 'Viranti' && currentUser === 'wanita');
+                let canDelete = tx.userKey === currentUser;
 
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-50 hover:bg-slate-50/50 transition-all text-xs";
@@ -421,7 +444,7 @@
                     <td class="py-3 font-medium text-slate-700">${tx.desc}</td>
                     <td class="py-3 text-right font-bold text-rose-600">- ${formatRupiah(tx.amount)}</td>
                     <td class="py-3 text-center">
-                        ${canDelete ? `<button onclick="deleteExpense('${tx.owner === 'Firdaus' ? 'pria' : 'wanita'}', ${tx.id})" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>` : `<span class="text-slate-300 text-[10px] italic">Terkunci</span>`}
+                        ${canDelete ? `<button onclick="deleteExpense('${tx.userKey}', '${tx.id}')" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>` : `<span class="text-slate-300 text-[10px] italic">Terkunci</span>`}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -441,8 +464,6 @@
                 badge.innerText = "Belum Tercapai";
             }
         }
-
-        switchUser('pria');
     </script>
 </body>
 </html>
