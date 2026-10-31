@@ -58,7 +58,6 @@
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* Dynamic Theme Classes based on user palette */
         .theme-pria {
             background-color: #F0F8FF;
             color: #2B2D42;
@@ -74,7 +73,6 @@
             color: #0F172A;
         }
 
-        /* Keyframes Animation Toast Notification */
         @keyframes slideInRight {
             from {
                 transform: translateX(100%);
@@ -105,7 +103,6 @@
             animation: fadeOut 0.3s ease forwards;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -164,9 +161,10 @@
 
         <!-- Banner Info Dynamic Card -->
         <div id="bannerCard" class="rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#90E0EF] to-[#B5E2FA] text-[#2B2D42]">
-            <!-- Ganti Cincin Emoji dengan Elemen PNG Custom yang bisa diubah URL/Fotonya -->
-            <div class="absolute right-[-10px] bottom-[-10px] pointer-events-none select-none">
-                <img id="bannerIconPng" src="https://placehold.co/200x200/png?text=💍" alt="Banner Icon" class="w-44 h-44 object-contain opacity-25 filter drop-shadow">
+            <!-- Custom PNG Banner / Fallback Emoji Ring -->
+            <div class="absolute right-[-10px] bottom-[-10px] pointer-events-none select-none flex items-center justify-center w-44 h-44">
+                <img id="bannerIconPng" src="" alt="Banner Icon" class="w-44 h-44 object-contain opacity-30 filter drop-shadow hidden">
+                <span id="bannerFallbackIcon" class="text-7xl opacity-20 select-none">💍</span>
             </div>
             <div class="relative z-10">
                 <div class="flex items-center justify-between">
@@ -256,7 +254,7 @@
                 </button>
             </div>
 
-            <!-- Ringkasan Statistik Lingkaran khusus Admin AWIN (Hanya tampil di Mode AWIN) -->
+            <!-- Ringkasan Statistik & Kelola Foto/PNG khusus Admin AWIN -->
             <div id="adminStatsCircleContainer" class="hidden pt-4 border-t border-slate-100">
                 <p class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5">
                     <i class="fa-solid fa-chart-pie text-slate-500"></i> Ringkasan Statistik Tabungan & Rasio Pengeluaran
@@ -311,39 +309,57 @@
                     </div>
                 </div>
 
-                <!-- Panel Kelola Foto Profil 3 Device khusus Admin AWIN -->
-                <div class="mt-4 p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-3">
-                    <div class="flex items-center justify-between">
+                <!-- Panel Kelola Foto Profil & PNG Banner Khusus Admin AWIN -->
+                <div class="mt-4 p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <h5 class="text-xs font-bold flex items-center gap-2 text-slate-200">
-                            <i class="fa-solid fa-[#90E0EF] fa-sliders"></i> Admin Control: Upload Foto Profil All Device
+                            <i class="fa-solid fa-sliders text-[#90E0EF]"></i> Admin Control: Upload Foto & PNG Banner
                         </h5>
-                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">Direct Firebase Sync</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">Firebase Cloud Sync</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <!-- Upload Firdaus -->
-                        <div class="bg-slate-800/80 p-2.5 rounded-xl text-center border border-slate-700/60">
-                            <p class="text-[11px] font-bold text-[#B5E2FA] mb-1.5">Foto Firdaus</p>
-                            <button onclick="triggerAdminAvatarUpload('pria')" class="w-full bg-[#B5E2FA] text-[#2B2D42] text-[10px] font-bold py-1.5 px-2 rounded-lg hover:brightness-110 transition-all">
-                                📤 Ganti Foto
-                            </button>
-                        </div>
-                        <!-- Upload Viranti -->
-                        <div class="bg-slate-800/80 p-2.5 rounded-xl text-center border border-slate-700/60">
-                            <p class="text-[11px] font-bold text-[#FFCAD4] mb-1.5">Foto Viranti</p>
-                            <button onclick="triggerAdminAvatarUpload('wanita')" class="w-full bg-[#FFCAD4] text-[#4A4E69] text-[10px] font-bold py-1.5 px-2 rounded-lg hover:brightness-110 transition-all">
-                                📤 Ganti Foto
-                            </button>
-                        </div>
-                        <!-- Upload AWIN -->
-                        <div class="bg-slate-800/80 p-2.5 rounded-xl text-center border border-slate-700/60">
-                            <p class="text-[11px] font-bold text-slate-300 mb-1.5">Foto AWIN</p>
-                            <button onclick="triggerAdminAvatarUpload('admin')" class="w-full bg-slate-700 text-white text-[10px] font-bold py-1.5 px-2 rounded-lg hover:bg-slate-600 transition-all">
-                                📤 Ganti Foto
-                            </button>
+
+                    <!-- 1. Upload Foto Profil User -->
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-400 mb-2">1. Ganti Foto Profil Avatar (3 Device)</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-slate-700/60">
+                                <p class="text-[10px] font-bold text-[#B5E2FA] mb-1">Firdaus</p>
+                                <button onclick="triggerAdminAvatarUpload('pria')" class="w-full bg-[#B5E2FA] text-[#2B2D42] text-[10px] font-bold py-1.5 rounded-lg hover:brightness-110">
+                                    📤 Upload Foto
+                                </button>
+                            </div>
+                            <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-slate-700/60">
+                                <p class="text-[10px] font-bold text-[#FFCAD4] mb-1">Viranti</p>
+                                <button onclick="triggerAdminAvatarUpload('wanita')" class="w-full bg-[#FFCAD4] text-[#4A4E69] text-[10px] font-bold py-1.5 rounded-lg hover:brightness-110">
+                                    📤 Upload Foto
+                                </button>
+                            </div>
+                            <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-slate-700/60">
+                                <p class="text-[10px] font-bold text-slate-300 mb-1">AWIN</p>
+                                <button onclick="triggerAdminAvatarUpload('admin')" class="w-full bg-slate-700 text-white text-[10px] font-bold py-1.5 rounded-lg hover:bg-slate-600">
+                                    📤 Upload Foto
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <!-- Hidden File Input for Admin Upload -->
+
+                    <!-- 2. Upload Custom PNG Banner -->
+                    <div class="border-t border-slate-800/80 pt-3">
+                        <p class="text-[11px] font-bold text-slate-400 mb-2">2. Ganti PNG Custom Banner Pojok Kanan</p>
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
+                            <button onclick="document.getElementById('bannerPngInput').click()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-[11px] px-4 py-2 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                🖼️ Ganti PNG Banner Custom
+                            </button>
+                            <button onclick="resetBannerPng()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[10px] px-3 py-2 rounded-xl border border-slate-700">
+                                Reset Ke Ikon Default (💍)
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1">Upload gambar PNG transparan dari HP/Laptop untuk menggantikan ikon default di banner.</p>
+                    </div>
+
+                    <!-- Hidden File Inputs -->
                     <input type="file" id="adminAvatarFileInput" accept="image/*" class="hidden" onchange="handleAdminAvatarSelected(event)">
+                    <input type="file" id="bannerPngInput" accept="image/png,image/*" class="hidden" onchange="handleBannerPngUpload(event)">
                 </div>
             </div>
 
@@ -371,7 +387,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Form Catat Pengeluaran (Sembunyi otomatis saat di mode AWIN) -->
+            <!-- Form Catat Pengeluaran -->
             <div id="expenseFormContainer" class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-1 h-fit">
                 <h3 class="font-bold text-base text-slate-800 mb-1">📝 Catat Pengeluaran Makan</h3>
                 <p class="text-xs text-slate-500 mb-4">Akan memotong jatah makan Rp 1,5 Juta.</p>
@@ -446,7 +462,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Konfigurasi Firebase Realtime Database
         const firebaseConfig = {
             apiKey: "AIzaSyA8QRhbrJsIQPoCZ4_n24mGOBjG-MusjDI",
             authDomain: "keuangan-nikah.firebaseapp.com",
@@ -461,17 +476,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let currentUser = 'pria'; // default Firdaus
+        let currentUser = 'pria';
         let appData = {
             pria: { expenses: {} },
             wanita: { expenses: {} },
             tabunganBersamaHistory: {},
-            avatars: {}
+            avatars: {},
+            customBannerPng: null
         };
 
         const JATAH_MAKAN_BULANAN = 1500000;
 
-        // --- Helper Formatting & Utility Functions ---
         function formatRupiah(angka) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka || 0);
         }
@@ -493,7 +508,7 @@
             input.value = rupiah;
         }
 
-        window.showToastNotification = function(title, message, icon = '✨', type = 'makan') {
+        window.showToastNotification = function(title, message, icon = '✨') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
@@ -518,7 +533,7 @@
             }, 3000);
         }
 
-        // --- Avatar Sync Display ---
+        // --- Avatar & Banner PNG Sync ---
         window.updateAvatarDisplay = function() {
             const avatarImg = document.getElementById('avatarImg');
             if (!avatarImg) return;
@@ -535,6 +550,19 @@
                     avatarImg.src = "https://placehold.co/100x100/1E293B/FFFFFF?text=AWIN";
                 }
             }
+
+            // Update PNG Custom Banner
+            const bannerIconPng = document.getElementById('bannerIconPng');
+            const bannerFallbackIcon = document.getElementById('bannerFallbackIcon');
+            
+            if (appData.customBannerPng) {
+                bannerIconPng.src = appData.customBannerPng;
+                bannerIconPng.classList.remove('hidden');
+                bannerFallbackIcon.classList.add('hidden');
+            } else {
+                bannerIconPng.classList.add('hidden');
+                bannerFallbackIcon.classList.remove('hidden');
+            }
         }
 
         window.handleAvatarUpload = function(event) {
@@ -550,12 +578,11 @@
             reader.onload = function(e) {
                 const base64Image = e.target.result;
                 set(ref(db, `keuangan_nikah_data/avatars/${currentUser}`), base64Image);
-                showToastNotification('Foto Profil Diperbarui! ✨', 'Foto profil tersimpan & tersinkron di semua HP/Laptop.', '📸', 'tabungan');
+                showToastNotification('Foto Profil Diperbarui! ✨', 'Foto profil tersimpan & tersinkron di semua HP/Laptop.', '📸');
             };
             reader.readAsDataURL(file);
         }
 
-        // Target Akun yang sedang di-upload oleh Admin
         let targetAdminUserUpload = 'pria';
 
         window.triggerAdminAvatarUpload = function(targetUser) {
@@ -577,13 +604,38 @@
                 const base64Image = e.target.result;
                 set(ref(db, `keuangan_nikah_data/avatars/${targetAdminUserUpload}`), base64Image);
                 const targetName = targetAdminUserUpload === 'pria' ? 'Firdaus' : (targetAdminUserUpload === 'wanita' ? 'Viranti' : 'AWIN');
-                showToastNotification('Foto Berhasil Diubah! 📸', `Foto profil ${targetName} tersimpan di Firebase cloud.`, '✨');
+                showToastNotification('Foto Berhasil Diubah! 📸', `Foto profil ${targetName} tersimpan di Firebase.`, '✨');
             };
             reader.readAsDataURL(file);
             event.target.value = '';
         }
 
-        // --- Modal & Form Actions ---
+        // --- Custom Banner PNG Upload ---
+        window.handleBannerPngUpload = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 1.5 * 1024 * 1024) {
+                alert("Ukuran PNG terlalu besar. Gunakan file di bawah 1.5 MB!");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Png = e.target.result;
+                set(ref(db, 'keuangan_nikah_data/customBannerPng'), base64Png);
+                showToastNotification('PNG Banner Diubah! 🖼️', 'Tampilan PNG banner tersinkron ke semua device.', '✨');
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        window.resetBannerPng = function() {
+            set(ref(db, 'keuangan_nikah_data/customBannerPng'), null);
+            showToastNotification('Banner Direset 💍', 'PNG banner kembali ke ikon default.', 'ℹ️');
+        }
+
+        // --- Actions ---
         window.tambahTabunganModal = function() {
             document.getElementById('modal-tabungan').classList.remove('hidden');
             document.getElementById('modal-tabungan').classList.add('flex');
@@ -762,10 +814,11 @@
                     pria: { expenses: data.pria?.expenses || {} },
                     wanita: { expenses: data.wanita?.expenses || {} },
                     tabunganBersamaHistory: data.tabunganBersamaHistory || {},
-                    avatars: data.avatars || {}
+                    avatars: data.avatars || {},
+                    customBannerPng: data.customBannerPng || null
                 };
             } else {
-                appData = { pria: { expenses: {} }, wanita: { expenses: {} }, tabunganBersamaHistory: {}, avatars: {} };
+                appData = { pria: { expenses: {} }, wanita: { expenses: {} }, tabunganBersamaHistory: {}, avatars: {}, customBannerPng: null };
             }
             updateAvatarDisplay();
             updateUI();
