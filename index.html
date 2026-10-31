@@ -92,18 +92,14 @@
 
         <!-- Status & Banner Info -->
         <div id="bannerCard" class="rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#90E0EF] to-[#B5E2FA] text-[#2B2D42]">
-            
-            <!-- Mascot Pinguin per Profil (Mepet Kanan Bawah) -->
+            <!-- Mascot Pinguin / Banner Custom per Profil (Firebase Sync) -->
             <div class="absolute right-0 bottom-0 pointer-events-none select-none flex items-end justify-end h-full pr-1 pb-1 z-0">
-                <img id="pinguinPria" src="https://i.ibb.co/6P0qYx7/20261031-163318.png" alt="Pinguin Firdaus" class="h-36 sm:h-44 object-contain transition-all duration-300 drop-shadow-md">
-                <img id="pinguinWanita" src="https://i.ibb.co/3sX8dZt/20261031-163349.png" alt="Pinguin Viranti" class="h-36 sm:h-44 object-contain transition-all duration-300 drop-shadow-md hidden">
-                <div id="pinguinAdminPair" class="hidden flex items-end -space-x-4">
-                    <img src="https://i.ibb.co/6P0qYx7/20261031-163318.png" alt="Pinguin Firdaus" class="h-32 sm:h-40 object-contain drop-shadow-md z-10">
-                    <img src="https://i.ibb.co/3sX8dZt/20261031-163349.png" alt="Pinguin Viranti" class="h-32 sm:h-40 object-contain drop-shadow-md z-0">
-                </div>
+                <img id="bannerImgPria" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' fill='none' stroke='%232B2D42' stroke-width='1.5'><path d='M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z'/><path d='M19 11v1a7 7 0 0 1-14 0v-1'/></svg>" alt="Banner Firdaus" class="h-32 sm:h-40 object-contain drop-shadow-md transition-all">
+                <img id="bannerImgWanita" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' fill='none' stroke='%234A4E69' stroke-width='1.5'><path d='M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z'/><path d='M19 11v1a7 7 0 0 1-14 0v-1'/></svg>" alt="Banner Viranti" class="h-32 sm:h-40 object-contain drop-shadow-md transition-all hidden">
+                <img id="bannerImgAdmin" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='1.5'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>" alt="Banner AWIN Wide" class="w-48 sm:w-64 h-28 sm:h-36 object-contain drop-shadow-md transition-all hidden">
             </div>
 
-            <div class="relative z-10">
+            <div class="relative z-10 max-w-[65%] sm:max-w-[70%]">
                 <div class="flex justify-between items-start">
                     <span id="active-user-badge" class="bg-white/30 backdrop-blur-md text-current text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Dompet Firdaus</span>
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-800 border border-emerald-500/30 flex items-center gap-1">
@@ -111,17 +107,17 @@
                     </span>
                 </div>
                 
-                <h2 id="active-user-title" class="text-2xl font-bold mt-3">Halo, Firdaus Almubin!</h2>
-                <p id="bannerSubtitle" class="opacity-80 text-xs sm:text-sm mt-1 max-w-md">Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.</p>
+                <h2 id="active-user-title" class="text-xl sm:text-2xl font-bold mt-3">Halo, Firdaus Almubin!</h2>
+                <p id="bannerSubtitle" class="opacity-80 text-xs sm:text-sm mt-1">Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.</p>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t border-current/10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-4 border-t border-current/10">
                     <div>
                         <p id="label-metric-1" class="text-xs opacity-75">Sisa Jatah Makan Bulan Ini</p>
-                        <p id="sisa-makan-display" class="text-2xl sm:text-3xl font-extrabold mt-0.5">Rp 1.500.000</p>
+                        <p id="sisa-makan-display" class="text-xl sm:text-3xl font-extrabold mt-0.5">Rp 1.500.000</p>
                     </div>
                     <div>
                         <p id="label-metric-2" class="text-xs opacity-75">Total Pengeluaran Bulan Ini</p>
-                        <p id="total-pengeluaran-display" class="text-xl sm:text-2xl font-bold mt-0.5 opacity-90">Rp 0</p>
+                        <p id="total-pengeluaran-display" class="text-lg sm:text-2xl font-bold mt-0.5 opacity-90">Rp 0</p>
                     </div>
                 </div>
             </div>
@@ -185,57 +181,83 @@
 
                 <!-- Panel Admin Control Upload Foto ALL Device -->
                 <div class="mt-4 pt-4 border-t border-slate-200/80 bg-slate-900 text-white rounded-2xl p-4">
-                    <h5 class="font-bold text-xs text-sky-400 mb-2 flex items-center gap-1.5">
-                        ⚡ Admin Control: Upload Foto Profil & PNG Banner (Realtime Sync 3 Device)
+                    <h5 class="font-bold text-xs text-sky-400 mb-1 flex items-center gap-1.5">
+                        ⚡ Admin Control (Realtime Cloud Storage Firebase)
                     </h5>
-                    <p class="text-[11px] text-slate-300 mb-3">Upload gambar langsung tersimpan ke Cloud Database Firebase tanpa perlu URL Imgur!</p>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <p class="text-[11px] text-slate-300 mb-3">Upload foto avatar & banner custom untuk masing-masing profil tanpa ImgBB!</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         <button onclick="uploadSpecificAsset('pria')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
-                            📷 Foto Firdaus
+                            📷 Foto Profil Firdaus
                         </button>
                         <button onclick="uploadSpecificAsset('wanita')" class="bg-pink-600 hover:bg-pink-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
-                            📷 Foto Viranti
+                            📷 Foto Profil Viranti
                         </button>
                         <button onclick="uploadSpecificAsset('admin')" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
-                            📷 Foto Admin
+                            📷 Foto Profil Admin
                         </button>
-                        <button onclick="uploadSpecificAsset('bannerCustom')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
-                            🖼️ PNG Banner
+                        <button onclick="uploadSpecificAsset('bannerPria')" class="bg-sky-700 hover:bg-sky-600 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            🖼️ Banner Firdaus
+                        </button>
+                        <button onclick="uploadSpecificAsset('bannerWanita')" class="bg-pink-700 hover:bg-pink-600 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            🖼️ Banner Viranti
+                        </button>
+                        <button onclick="uploadSpecificAsset('bannerAdmin')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            🖼️ Banner AWIN (Wide)
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Milestone List -->
+            <!-- Milestone List dengan Foto Custom -->
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <div id="ms-5" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
-                    <span class="text-xl">🎉</span>
-                    <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 5 Juta</h4>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Syukuran Makan (Rp 300rb)</p>
+                <div id="ms-5" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
+                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-amber-100">
+                        <img id="msIcon-5" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d97706' stroke-width='2'><path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/></svg>" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-700">Rp 5 Juta</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Syukuran Makan (300rb)</p>
+                    </div>
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
-                <div id="ms-10" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
-                    <span class="text-xl">🚗</span>
-                    <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 10 Juta</h4>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Jalan-Jalan ke Bandung</p>
+                <div id="ms-10" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
+                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-sky-100">
+                        <img id="msIcon-10" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%230284c7' stroke-width='2'><path d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2'/><circle cx='7' cy='17' r='2'/><circle cx='17' cy='17' r='2'/></svg>" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-700">Rp 10 Juta</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Jalan-Jalan Bandung</p>
+                    </div>
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
-                <div id="ms-20" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
-                    <span class="text-xl">💍</span>
-                    <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 20 Juta</h4>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Mulai Cicil Seserahan</p>
+                <div id="ms-20" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
+                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-rose-100">
+                        <img id="msIcon-20" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e11d48' stroke-width='2'><circle cx='12' cy='12' r='8'/><path d='M12 2v4'/></svg>" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-700">Rp 20 Juta</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Cicil Seserahan</p>
+                    </div>
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
-                <div id="ms-30" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
-                    <span class="text-xl">🏡</span>
-                    <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 30 Juta (Min)</h4>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Nikah di Palembang</p>
+                <div id="ms-30" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
+                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-emerald-100">
+                        <img id="msIcon-30" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2'><path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg>" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-700">Rp 30 Juta (Min)</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Nikah di Palembang</p>
+                    </div>
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
-                <div id="ms-50" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 col-span-2 md:col-span-1">
-                    <span class="text-xl">✨</span>
-                    <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 50 Juta (Max)</h4>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Pernikahan Ideal Lengkap</p>
+                <div id="ms-50" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 col-span-2 md:col-span-1 flex flex-col items-center justify-between">
+                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-purple-100">
+                        <img id="msIcon-50" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239333ea' stroke-width='2'><path d='M12 2L15 9l7 1-5 5 1 7-6-3.5L6 22l1-7-5-5 7-1 3-7z'/></svg>" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-700">Rp 50 Juta (Max)</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Pernikahan Ideal</p>
+                    </div>
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
             </div>
@@ -365,52 +387,51 @@
             wanita: { expenses: {} },
             tabunganBersamaHistory: {},
             avatars: {},
-            bannerCustom: null
+            banners: {},
+            milestones: {}
         };
 
         let currentUploadTarget = null;
         const JATAH_MAKAN_BULANAN = 1500000;
 
-        // --- Helper Functions Global ---
+        // --- Helper Formatting Rupiah & Utilities ---
         window.formatRupiah = function(angka) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
-        };
-
-        window.formatRupiahInput = function(input) {
-            let value = input.value.replace(/[^,\d]/g, '').toString();
-            let split = value.split(',');
-            let sisa = split[0].length % 3;
-            let rupiah = split[0].substr(0, sisa);
-            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-            if (ribuan) {
-                let separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-            input.value = rupiah;
+            if (angka === undefined || angka === null || isNaN(angka)) return 'Rp 0';
+            return 'Rp ' + Math.round(angka).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         };
 
         window.parseRupiah = function(str) {
-            return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+            if (!str) return 0;
+            const cleaned = str.toString().replace(/[^0-9]/g, '');
+            return parseInt(cleaned, 10) || 0;
         };
 
-        window.showToastNotification = function(title, message, user) {
-            const container = document.getElementById('toast-container');
-            if(!container) return;
-            const toast = document.createElement('div');
-            
-            let bgClass = "bg-slate-900 text-white border-slate-700";
-            if(user === 'pria') bgClass = "bg-[#2B2D42] text-white border-[#90E0EF]";
-            if(user === 'wanita') bgClass = "bg-[#4A4E69] text-white border-[#FFCAD4]";
+        window.formatRupiahInput = function(input) {
+            let val = input.value.replace(/[^0-9]/g, '');
+            if (val) {
+                input.value = Math.round(parseInt(val, 10)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            } else {
+                input.value = '';
+            }
+        };
 
-            toast.className = `toast-enter flex items-center gap-3 p-4 rounded-2xl shadow-2xl border ${bgClass} transition-all`;
+        window.showToastNotification = function(title, message, type = 'pria') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            let bgClass = "bg-slate-900 border-slate-700 text-white";
+            if (type === 'pria') bgClass = "bg-[#2B2D42] border-[#90E0EF]/40 text-white";
+            if (type === 'wanita') bgClass = "bg-[#4A4E69] border-[#FFCAD4]/40 text-white";
+
+            toast.className = `toast-enter p-3.5 rounded-2xl shadow-xl border backdrop-blur-md flex items-start gap-3 pointer-events-auto ${bgClass}`;
             toast.innerHTML = `
-                <div class="text-2xl">✨</div>
+                <div class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 shrink-0 animate-pulse"></div>
                 <div class="flex-1 min-w-0">
-                    <h5 class="text-xs font-bold leading-tight">${title}</h5>
-                    <p class="text-[11px] opacity-90 truncate mt-0.5">${message}</p>
+                    <p class="text-xs font-bold leading-tight">${title}</p>
+                    <p class="text-[11px] opacity-80 mt-0.5 leading-snug">${message}</p>
                 </div>
             `;
-
             container.appendChild(toast);
 
             setTimeout(() => {
@@ -420,7 +441,6 @@
             }, 3500);
         };
 
-        // --- Avatar Cloud Functions ---
         window.triggerAvatarUpload = function() {
             currentUploadTarget = currentUser;
             document.getElementById('avatarFileInput').click();
@@ -444,12 +464,17 @@
             const reader = new FileReader();
             reader.onload = function(evt) {
                 const base64Image = evt.target.result;
-                if (targetKey === 'bannerCustom') {
-                    set(ref(db, `keuangan_nikah_data/bannerCustom`), base64Image);
-                    showToastNotification("PNG Banner Diperbarui", "Banner custom tersimpan untuk 3 device!", currentUser);
+                if (targetKey.startsWith('banner')) {
+                    const bannerType = targetKey.replace('banner', '').toLowerCase();
+                    set(ref(db, `keuangan_nikah_data/banners/${bannerType}`), base64Image);
+                    showToastNotification("Banner Diperbarui", `Banner ${bannerType} tersimpan di Cloud Database!`, currentUser);
+                } else if (targetKey.startsWith('msIcon')) {
+                    const msVal = targetKey.replace('msIcon', '');
+                    set(ref(db, `keuangan_nikah_data/milestones/${msVal}`), base64Image);
+                    showToastNotification("Milestone Foto Diperbarui", `Foto milestone Rp ${msVal} Juta tersimpan!`, currentUser);
                 } else {
                     set(ref(db, `keuangan_nikah_data/avatars/${targetKey}`), base64Image);
-                    showToastNotification("Foto Profil Diperbarui", `Foto ${targetKey} tersimpan untuk 3 device!`, currentUser);
+                    showToastNotification("Foto Profil Diperbarui", `Foto profil ${targetKey} tersimpan di Cloud Database!`, currentUser);
                 }
             };
             reader.readAsDataURL(file);
@@ -473,6 +498,26 @@
             }
         };
 
+        window.updateBannerDisplay = function() {
+            const imgPria = document.getElementById('bannerImgPria');
+            const imgWanita = document.getElementById('bannerImgWanita');
+            const imgAdmin = document.getElementById('bannerImgAdmin');
+
+            if (appData.banners?.pria && imgPria) imgPria.src = appData.banners.pria;
+            if (appData.banners?.wanita && imgWanita) imgWanita.src = appData.banners.wanita;
+            if (appData.banners?.admin && imgAdmin) imgAdmin.src = appData.banners.admin;
+
+            // Render Foto Custom Milestone jika diupload via Firebase
+            if (appData.milestones) {
+                ['5', '10', '20', '30', '50'].forEach(val => {
+                    const iconEl = document.getElementById(`msIcon-${val}`);
+                    if (iconEl && appData.milestones[val]) {
+                        iconEl.src = appData.milestones[val];
+                    }
+                });
+            }
+        };
+
         // --- Switch User ---
         window.switchUser = function(user) {
             currentUser = user;
@@ -494,9 +539,9 @@
             const setorTabunganContainer = document.getElementById('setorTabunganContainer');
             const adminStatsCircleContainer = document.getElementById('adminStatsCircleContainer');
 
-            const pinguinPria = document.getElementById('pinguinPria');
-            const pinguinWanita = document.getElementById('pinguinWanita');
-            const pinguinAdminPair = document.getElementById('pinguinAdminPair');
+            const imgPria = document.getElementById('bannerImgPria');
+            const imgWanita = document.getElementById('bannerImgWanita');
+            const imgAdmin = document.getElementById('bannerImgAdmin');
 
             if (user === 'pria') {
                 appBody.className = "theme-pria min-h-screen pb-12 bg-slate-50 text-slate-800";
@@ -521,9 +566,9 @@
                 adminStatsCircleContainer.classList.add('hidden');
                 historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
 
-                if(pinguinPria) pinguinPria.classList.remove('hidden');
-                if(pinguinWanita) pinguinWanita.classList.add('hidden');
-                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
+                if(imgPria) imgPria.classList.remove('hidden');
+                if(imgWanita) imgWanita.classList.add('hidden');
+                if(imgAdmin) imgAdmin.classList.add('hidden');
 
             } else if (user === 'wanita') {
                 appBody.className = "theme-wanita min-h-screen pb-12 bg-slate-50 text-slate-800";
@@ -548,9 +593,9 @@
                 adminStatsCircleContainer.classList.add('hidden');
                 historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
 
-                if(pinguinPria) pinguinPria.classList.add('hidden');
-                if(pinguinWanita) pinguinWanita.classList.remove('hidden');
-                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
+                if(imgPria) imgPria.classList.add('hidden');
+                if(imgWanita) imgWanita.classList.remove('hidden');
+                if(imgAdmin) imgAdmin.classList.add('hidden');
 
             } else if (user === 'admin') {
                 appBody.className = "theme-admin min-h-screen pb-12 bg-slate-50 text-slate-800";
@@ -561,7 +606,7 @@
 
                 bannerCard.className = "rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white";
 
-                badge.innerText = "Akun Admin";
+                badge.innerText = "ADMIN";
                 title.innerText = "AWIN SANG DEVELOPER";
                 bannerSubtitle.innerText = "Ringkasan Total Keuangan & Kontrol Penuh Data Firdaus & Viranti.";
 
@@ -573,12 +618,13 @@
                 adminStatsCircleContainer.classList.remove('hidden');
                 historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-3";
 
-                if(pinguinPria) pinguinPria.classList.add('hidden');
-                if(pinguinWanita) pinguinWanita.classList.add('hidden');
-                if(pinguinAdminPair) pinguinAdminPair.classList.remove('hidden');
+                if(imgPria) imgPria.classList.add('hidden');
+                if(imgWanita) imgWanita.classList.add('hidden');
+                if(imgAdmin) imgAdmin.classList.remove('hidden');
             }
 
             updateAvatarDisplay();
+            updateBannerDisplay();
             updateUI();
         };
 
@@ -591,177 +637,19 @@
                     pria: { expenses: data.pria?.expenses || {} },
                     wanita: { expenses: data.wanita?.expenses || {} },
                     tabunganBersamaHistory: data.tabunganBersamaHistory || {},
-                    avatars: data.avatars || {}
+                    avatars: data.avatars || {},
+                    banners: data.banners || {},
+                    milestones: data.milestones || {}
                 };
             } else {
-                appData = { pria: { expenses: {} }, wanita: { expenses: {} }, tabunganBersamaHistory: {}, avatars: {} };
+                appData = { pria: { expenses: {} }, wanita: { expenses: {} }, tabunganBersamaHistory: {}, avatars: {}, banners: {}, milestones: {} };
             }
             updateAvatarDisplay();
+            updateBannerDisplay();
             updateUI();
         });
 
-        // --- Avatar Cloud Functions ---
-        window.triggerAvatarUpload = function() {
-            currentUploadTarget = currentUser;
-            document.getElementById('avatarFileInput').click();
-        };
-
-        window.uploadSpecificAsset = function(targetKey) {
-            currentUploadTarget = targetKey;
-            document.getElementById('avatarFileInput').click();
-        };
-
-        window.handleAvatarSelected = function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            if (file.size > 2 * 1024 * 1024) {
-                alert("Ukuran gambar terlalu besar! Harap pilih gambar di bawah 2MB.");
-                return;
-            }
-
-            const targetKey = currentUploadTarget || currentUser;
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const base64Image = evt.target.result;
-                if (targetKey === 'bannerCustom') {
-                    set(ref(db, `keuangan_nikah_data/bannerCustom`), base64Image);
-                    showToastNotification("PNG Banner Diperbarui", "Banner custom tersimpan untuk 3 device!", currentUser);
-                } else {
-                    set(ref(db, `keuangan_nikah_data/avatars/${targetKey}`), base64Image);
-                    showToastNotification("Foto Profil Diperbarui", `Foto ${targetKey} tersimpan untuk 3 device!`, currentUser);
-                }
-            };
-            reader.readAsDataURL(file);
-        };
-
-        window.updateAvatarDisplay = function() {
-            const imgEl = document.getElementById('headerAvatarImg');
-            const savedAvatar = appData.avatars && appData.avatars[currentUser];
-
-            if (savedAvatar) {
-                imgEl.src = savedAvatar;
-            } else {
-                if (currentUser === 'pria') {
-                    imgEl.src = "https://ui-avatars.com/api/?name=Firdaus&background=90E0EF&color=2B2D42";
-                } else if (currentUser === 'wanita') {
-                    imgEl.src = "https://ui-avatars.com/api/?name=Viranti&background=FFCAD4&color=4A4E69";
-                } else {
-                    imgEl.src = "https://ui-avatars.com/api/?name=AWIN&background=334155&color=ffffff";
-                }
-            }
-        };
-
-        // --- Switch User ---
-        window.switchUser = function(user) {
-            currentUser = user;
-            const appBody = document.getElementById('appBody');
-            const btnPria = document.getElementById('btn-pria');
-            const btnWanita = document.getElementById('btn-wanita');
-            const btnAdmin = document.getElementById('btn-admin');
-            
-            const bannerCard = document.getElementById('bannerCard');
-            const badge = document.getElementById('active-user-badge');
-            const title = document.getElementById('active-user-title');
-            const bannerSubtitle = document.getElementById('bannerSubtitle');
-            const submitBtn = document.getElementById('submit-btn');
-            
-            const labelMetric1 = document.getElementById('label-metric-1');
-            const labelMetric2 = document.getElementById('label-metric-2');
-            const expenseFormContainer = document.getElementById('expenseFormContainer');
-            const historyTableContainer = document.getElementById('historyTableContainer');
-            const setorTabunganContainer = document.getElementById('setorTabunganContainer');
-            const adminStatsCircleContainer = document.getElementById('adminStatsCircleContainer');
-
-            const pinguinPria = document.getElementById('pinguinPria');
-            const pinguinWanita = document.getElementById('pinguinWanita');
-            const pinguinAdminPair = document.getElementById('pinguinAdminPair');
-
-            if (user === 'pria') {
-                appBody.className = "theme-pria min-h-screen pb-12 bg-slate-50 text-slate-800";
-                
-                btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#B5E2FA] text-[#2B2D42]";
-                btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
-                btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-500 hover:bg-slate-200 flex items-center gap-1";
-
-                bannerCard.className = "rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#90E0EF] to-[#B5E2FA] text-[#2B2D42]";
-                
-                badge.innerText = "Dompet Firdaus";
-                title.innerText = "Halo, Firdaus Almubin!";
-                bannerSubtitle.innerText = "Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.";
-                
-                labelMetric1.innerText = "Sisa Jatah Makan Bulan Ini";
-                labelMetric2.innerText = "Total Pengeluaran Bulan Ini";
-
-                submitBtn.className = "w-full bg-[#B5E2FA] hover:brightness-95 text-[#2B2D42] font-bold py-3 rounded-xl text-sm transition-all shadow-md";
-                
-                expenseFormContainer.classList.remove('hidden');
-                setorTabunganContainer.classList.remove('hidden');
-                adminStatsCircleContainer.classList.add('hidden');
-                historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
-
-                if(pinguinPria) pinguinPria.classList.remove('hidden');
-                if(pinguinWanita) pinguinWanita.classList.add('hidden');
-                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
-
-            } else if (user === 'wanita') {
-                appBody.className = "theme-wanita min-h-screen pb-12 bg-slate-50 text-slate-800";
-                
-                btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#FFCAD4] text-[#4A4E69]";
-                btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
-                btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-500 hover:bg-slate-200 flex items-center gap-1";
-
-                bannerCard.className = "rounded-3xl p-6 shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#FDE2E4] to-[#FFCAD4] text-[#4A4E69]";
-                
-                badge.innerText = "Dompet Viranti";
-                title.innerText = "Halo, Viranti!";
-                bannerSubtitle.innerText = "Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.";
-                
-                labelMetric1.innerText = "Sisa Jatah Makan Bulan Ini";
-                labelMetric2.innerText = "Total Pengeluaran Bulan Ini";
-
-                submitBtn.className = "w-full bg-[#FFCAD4] hover:brightness-95 text-[#4A4E69] font-bold py-3 rounded-xl text-sm transition-all shadow-md";
-                
-                expenseFormContainer.classList.remove('hidden');
-                setorTabunganContainer.classList.remove('hidden');
-                adminStatsCircleContainer.classList.add('hidden');
-                historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
-
-                if(pinguinPria) pinguinPria.classList.add('hidden');
-                if(pinguinWanita) pinguinWanita.classList.remove('hidden');
-                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
-
-            } else if (user === 'admin') {
-                appBody.className = "theme-admin min-h-screen pb-12 bg-slate-50 text-slate-800";
-
-                btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-slate-900 text-white flex items-center gap-1";
-                btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
-                btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
-
-                bannerCard.className = "rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white";
-
-                badge.innerText = "Akun Admin";
-                title.innerText = "AWIN SANG DEVELOPER";
-                bannerSubtitle.innerText = "Ringkasan Total Keuangan & Kontrol Penuh Data Firdaus & Viranti.";
-
-                labelMetric1.innerText = "Sisa Jatah Makan Total (Gabungan)";
-                labelMetric2.innerText = "Total Pengeluaran Berdua";
-
-                expenseFormContainer.classList.add('hidden');
-                setorTabunganContainer.classList.add('hidden');
-                adminStatsCircleContainer.classList.remove('hidden');
-                historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-3";
-
-                if(pinguinPria) pinguinPria.classList.add('hidden');
-                if(pinguinWanita) pinguinWanita.classList.add('hidden');
-                if(pinguinAdminPair) pinguinAdminPair.classList.remove('hidden');
-            }
-
-            updateAvatarDisplay();
-            updateUI();
-        };
-
-        // --- Add Expense ---
+        // --- Actions ---
         window.addExpense = function(e) {
             e.preventDefault();
             const amountStr = document.getElementById('amount').value;
@@ -787,7 +675,7 @@
 
         window.deleteExpense = function(user, id) {
             if (currentUser !== 'admin' && user !== currentUser) {
-                alert("Kamu hanya bisa menghapus data milikmu sendiri demi privasi & kontrol masing-masing!");
+                alert("Kamu hanya bisa menghapus data milikmu sendiri demi privasi!");
                 return;
             }
             if (confirm("Yakin ingin menghapus item pengeluaran ini?")) {
@@ -795,7 +683,6 @@
             }
         };
 
-        // --- Tabungan Modal ---
         window.tambahTabunganModal = function() {
             document.getElementById('modal-tabungan').classList.remove('hidden');
             document.getElementById('modal-tabungan').classList.add('flex');
@@ -839,7 +726,7 @@
             }
         };
 
-        // --- Render UI Data Sync ---
+        // --- Render UI ---
         function updateUI() {
             const priaExpensesObj = appData.pria.expenses || {};
             const wanitaExpensesObj = appData.wanita.expenses || {};
@@ -865,7 +752,6 @@
                 document.getElementById('total-pengeluaran-display').innerText = formatRupiah(totalPengeluaranGabungan);
             }
 
-            // Tabungan & Progress
             const tabunganArr = Object.entries(tabunganObj).map(([id, val]) => ({ id, ...val }));
             const totalTabungan = tabunganArr.reduce((sum, item) => sum + item.amount, 0);
             document.getElementById('total-tabungan-bersama').innerText = formatRupiah(totalTabungan);
@@ -874,7 +760,7 @@
             if (percent > 100) percent = 100;
             document.getElementById('progress-bar').style.width = percent + '%';
 
-            // Admin Stats Circles
+            // Radial Circles Update
             const circleTarget = document.getElementById('circle-progress-target');
             const circleTextTarget = document.getElementById('circle-text-target');
             if (circleTarget && circleTextTarget) {
@@ -905,7 +791,7 @@
             updateMilestoneStatus(30000000, 'ms-30', totalTabungan);
             updateMilestoneStatus(50000000, 'ms-50', totalTabungan);
 
-            // Render Tabungan History Table
+            // Tabungan History
             const tabunganTbody = document.getElementById('tabungan-history-list');
             tabunganTbody.innerHTML = '';
 
@@ -929,7 +815,7 @@
                 });
             }
 
-            // Render Transaksi Makan Table
+            // Transactions Table
             const priaArr = Object.entries(priaExpensesObj).map(([id, val]) => ({ id, owner: 'Firdaus', userKey: 'pria', ...val }));
             const wanitaArr = Object.entries(wanitaExpensesObj).map(([id, val]) => ({ id, owner: 'Viranti', userKey: 'wanita', ...val }));
             const allTx = [...priaArr, ...wanitaArr].sort((a, b) => b.timestamp - a.timestamp);
