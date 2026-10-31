@@ -3,147 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabungan & Keuangan Nikah | Firdaus & Viranti</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Dompet Bersama Firdaus & Viranti</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        // Palet Firdaus (Cool Blue)
-                        firdaus: {
-                            blue: '#B5E2FA',
-                            cyan: '#90E0EF',
-                            bg: '#F0F8FF',
-                            yellow: '#FFD166',
-                            pink: '#F3C6F1',
-                            green: '#CCD5AE',
-                            text: '#2B2D42'
-                        },
-                        // Palet Viranti (Soft Pink)
-                        viranti: {
-                            primary: '#FDE2E4',
-                            rose: '#FFCAD4',
-                            bg: '#FFF1F2',
-                            yellow: '#FFD166',
-                            purple: '#F3C6F1',
-                            green: '#CCD5AE',
-                            text: '#4A4E69'
-                        },
-                        // Palet Admin (Laptop / Dev Mode)
-                        admin: {
-                            dark: '#1E293B',
-                            accent: '#3B82F6',
-                            bg: '#F8FAFC',
-                            card: '#FFFFFF',
-                            text: '#0F172A'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
         .theme-pria {
-            background-color: #F0F8FF;
-            color: #2B2D42;
+            --primary-accent: #B5E2FA;
+            --secondary-accent: #90E0EF;
+            --bg-light: #F0F8FF;
+            --highlight: #FFD166;
+            --text-color: #2B2D42;
         }
 
         .theme-wanita {
-            background-color: #FFF1F2;
-            color: #4A4E69;
+            --primary-accent: #FDE2E4;
+            --secondary-accent: #FFCAD4;
+            --bg-light: #FFF1F2;
+            --highlight: #FFD166;
+            --text-color: #4A4E69;
         }
 
         .theme-admin {
-            background-color: #F8FAFC;
-            color: #0F172A;
+            --primary-accent: #334155;
+            --secondary-accent: #0f172a;
+            --bg-light: #f8fafc;
+            --highlight: #38bdf8;
+            --text-color: #0f172a;
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        @keyframes toastSlideIn {
+            0% { transform: translateY(-100%) scale(0.9); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
         }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(20px);
-            }
+        @keyframes toastSlideOut {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100%) scale(0.9); opacity: 0; }
         }
-
-        .animate-toast-in {
-            animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .animate-toast-out {
-            animation: fadeOut 0.3s ease forwards;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-        }
+        .toast-enter { animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .toast-exit { animation: toastSlideOut 0.3s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
     </style>
 </head>
-<body id="appBody" class="theme-pria min-h-screen pb-12 relative overflow-x-hidden">
+<body id="appBody" class="theme-pria min-h-screen pb-12 bg-slate-50 text-slate-800 transition-colors duration-300">
 
-    <!-- Toast Notification Container Dynamic -->
-    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4"></div>
 
     <!-- Header / Navbar -->
-    <header id="appHeader" class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-40 shadow-sm transition-colors duration-300 border-slate-200">
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-30 shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <div class="flex items-center gap-3">
-                <!-- Foto Profil Avatar dengan Fitur Ganti/Upload Foto -->
-                <div class="relative group cursor-pointer" onclick="document.getElementById('avatarInput').click()" title="Klik untuk ganti foto profil">
-                    <img id="avatarImg" src="https://placehold.co/100x100/90E0EF/2B2D42?text=FD" alt="Foto Profil" class="w-10 h-10 rounded-2xl object-cover border-2 border-white shadow-sm transition-transform duration-300 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-bold">
-                        <i class="fa-solid fa-camera"></i>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <!-- Foto Profil Dynamic (Klik untuk Ganti) -->
+                <div class="relative group cursor-pointer" onclick="triggerAvatarUpload()" title="Klik untuk ganti foto profil">
+                    <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm flex items-center justify-center bg-slate-100">
+                        <img id="headerAvatarImg" src="https://ui-avatars.com/api/?name=Firdaus&background=90E0EF&color=2B2D42" alt="Foto Profil" class="w-full h-full object-cover">
                     </div>
-                    <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
+                    <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span class="text-white text-[10px] font-bold">Ganti</span>
+                    </div>
                 </div>
+                <input type="file" id="avatarFileInput" accept="image/*" class="hidden" onchange="handleAvatarSelected(event)">
+
                 <div>
-                    <h1 class="text-lg font-extrabold tracking-tight flex items-center gap-2" id="headerTitle">
+                    <h1 class="text-lg font-bold text-slate-800 flex items-center gap-2 leading-tight">
                         Tabungan & Keuangan Nikah
                     </h1>
-                    <p class="text-xs text-slate-500 font-medium">Firdaus Almubin & Viranti (Live Sync)</p>
+                    <p class="text-xs text-slate-500">Firdaus Almubin & Viranti (Live Sync)</p>
                 </div>
             </div>
             
-            <!-- Profil Switcher (Pria, Wanita, Admin) -->
-            <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl shadow-inner border border-slate-200/60">
+            <!-- Profil Switcher -->
+            <div class="flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50">
                 <button onclick="switchUser('pria')" id="btn-pria" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#B5E2FA] text-[#2B2D42]">
                     Firdaus
                 </button>
@@ -159,34 +90,38 @@
 
     <main class="max-w-4xl mx-auto px-4 mt-6 space-y-6">
 
-        <!-- Banner Info Dynamic Card -->
+        <!-- Status & Banner Info -->
         <div id="bannerCard" class="rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#90E0EF] to-[#B5E2FA] text-[#2B2D42]">
-            <!-- Custom PNG Banner / Fallback Emoji Ring -->
-            <div class="absolute right-[-10px] bottom-[-10px] pointer-events-none select-none flex items-center justify-center w-44 h-44">
-                <img id="bannerIconPng" src="" alt="Banner Icon" class="w-44 h-44 object-contain opacity-30 filter drop-shadow hidden">
-                <span id="bannerFallbackIcon" class="text-7xl opacity-20 select-none">💍</span>
+            
+            <!-- Mascot Pinguin per Profil (Mepet Kanan Bawah) -->
+            <div class="absolute right-0 bottom-0 pointer-events-none select-none flex items-end justify-end h-full pr-1 pb-1 z-0">
+                <img id="pinguinPria" src="https://i.ibb.co/6P0qYx7/20261031-163318.png" alt="Pinguin Firdaus" class="h-36 sm:h-44 object-contain transition-all duration-300 drop-shadow-md">
+                <img id="pinguinWanita" src="https://i.ibb.co/3sX8dZt/20261031-163349.png" alt="Pinguin Viranti" class="h-36 sm:h-44 object-contain transition-all duration-300 drop-shadow-md hidden">
+                <div id="pinguinAdminPair" class="hidden flex items-end -space-x-4">
+                    <img src="https://i.ibb.co/6P0qYx7/20261031-163318.png" alt="Pinguin Firdaus" class="h-32 sm:h-40 object-contain drop-shadow-md z-10">
+                    <img src="https://i.ibb.co/3sX8dZt/20261031-163349.png" alt="Pinguin Viranti" class="h-32 sm:h-40 object-contain drop-shadow-md z-0">
+                </div>
             </div>
+
             <div class="relative z-10">
-                <div class="flex items-center justify-between">
-                    <span id="active-user-badge" class="bg-white/40 backdrop-blur-md text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                        Dompet Firdaus
-                    </span>
-                    <span id="status-sync" class="text-xs font-bold bg-emerald-500/20 text-emerald-800 px-3 py-1 rounded-full border border-emerald-500/30">
-                        🟢 Cloud Terhubung
+                <div class="flex justify-between items-start">
+                    <span id="active-user-badge" class="bg-white/30 backdrop-blur-md text-current text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Dompet Firdaus</span>
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-800 border border-emerald-500/30 flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Cloud Terhubung
                     </span>
                 </div>
-
-                <h2 id="active-user-title" class="text-2xl font-extrabold mt-3 tracking-tight">Halo, Firdaus Almubin!</h2>
-                <p id="bannerSubtitle" class="text-xs opacity-90 mt-1 max-w-xl font-medium">Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.</p>
                 
-                <div id="bannerMetricsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t border-black/10">
+                <h2 id="active-user-title" class="text-2xl font-bold mt-3">Halo, Firdaus Almubin!</h2>
+                <p id="bannerSubtitle" class="opacity-80 text-xs sm:text-sm mt-1 max-w-md">Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t border-current/10">
                     <div>
-                        <p class="text-xs font-semibold opacity-80" id="label-metric-1">Sisa Jatah Makan Bulan Ini</p>
-                        <p id="sisa-makan-display" class="text-2xl font-black mt-0.5 tracking-tight">Rp 1.500.000</p>
+                        <p id="label-metric-1" class="text-xs opacity-75">Sisa Jatah Makan Bulan Ini</p>
+                        <p id="sisa-makan-display" class="text-2xl sm:text-3xl font-extrabold mt-0.5">Rp 1.500.000</p>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold opacity-80" id="label-metric-2">Total Pengeluaran Bulan Ini</p>
-                        <p id="total-pengeluaran-user" class="text-2xl font-black mt-0.5 tracking-tight">Rp 0</p>
+                        <p id="label-metric-2" class="text-xs opacity-75">Total Pengeluaran Bulan Ini</p>
+                        <p id="total-pengeluaran-display" class="text-xl sm:text-2xl font-bold mt-0.5 opacity-90">Rp 0</p>
                     </div>
                 </div>
             </div>
@@ -196,189 +131,115 @@
         <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <div>
-                    <h3 class="font-extrabold text-lg text-slate-800 flex items-center gap-2">
-                        🎯 Target & Milestone Nikah Bersama
-                    </h3>
-                    <p class="text-xs text-slate-500">Akumulasi Tabungan Bersama (Target Maks: Rp 50 Juta | Minimal: Rp 30 Juta)</p>
+                    <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">Target & Milestone Nikah Bersama</h3>
+                    <p class="text-xs text-slate-500">Akumulasi Tabungan Bersama Target Maks: Rp 50 Juta | Minimal: Rp 30 Juta</p>
                 </div>
                 <div class="text-right">
-                    <span id="total-tabungan-bersama" class="text-xl font-black text-emerald-600">Rp 0</span>
-                    <span class="text-xs text-slate-400 block font-medium">/ Rp 50.000.000</span>
+                    <span id="total-tabungan-bersama" class="text-xl font-extrabold text-emerald-600">Rp 0</span>
+                    <span class="text-xs text-slate-400 block">/ Rp 50.000.000</span>
                 </div>
             </div>
 
             <!-- Progress Bar -->
-            <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
-                <div id="progress-bar" class="bg-gradient-to-r from-[#90E0EF] via-[#FFD166] to-[#CCD5AE] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            <div class="w-full bg-slate-100 h-3.5 rounded-full overflow-hidden p-0.5 border border-slate-200/50">
+                <div id="progress-bar" class="bg-gradient-to-r from-emerald-400 to-teal-500 h-full rounded-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
+            </div>
+
+            <!-- Lingkaran Statistik Radial Khusus Admin AWIN -->
+            <div id="adminStatsCircleContainer" class="hidden pt-2 border-t border-slate-100">
+                <h4 class="font-bold text-xs text-slate-600 mb-3 uppercase tracking-wider">Statistik Rasio & Progress AWIN</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center">
+                        <div class="relative w-16 h-16 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="circle-progress-target" class="text-emerald-500 transition-all duration-500" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <span id="circle-text-target" class="absolute text-xs font-bold text-slate-700">0%</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-slate-600 mt-2">Target Tabungan</span>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center">
+                        <div class="relative w-16 h-16 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="circle-progress-pria" class="text-sky-500 transition-all duration-500" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <span id="circle-text-pria" class="absolute text-xs font-bold text-slate-700">0%</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-slate-600 mt-2">Jatah Makan Firdaus</span>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center">
+                        <div class="relative w-16 h-16 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="circle-progress-wanita" class="text-pink-500 transition-all duration-500" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <span id="circle-text-wanita" class="absolute text-xs font-bold text-slate-700">0%</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-slate-600 mt-2">Jatah Makan Viranti</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Milestone List -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div id="ms-5" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
                     <span class="text-xl">🎉</span>
                     <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 5 Juta</h4>
                     <p class="text-[10px] text-slate-500 mt-0.5">Syukuran Makan (Rp 300rb)</p>
-                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-slate-200 text-slate-600">Belum Tercapai</span>
+                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-10" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
                     <span class="text-xl">🚗</span>
                     <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 10 Juta</h4>
                     <p class="text-[10px] text-slate-500 mt-0.5">Jalan-Jalan ke Bandung</p>
-                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-slate-200 text-slate-600">Belum Tercapai</span>
+                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-20" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
                     <span class="text-xl">💍</span>
                     <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 20 Juta</h4>
                     <p class="text-[10px] text-slate-500 mt-0.5">Mulai Cicil Seserahan</p>
-                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-slate-200 text-slate-600">Belum Tercapai</span>
+                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-30" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
                     <span class="text-xl">🏡</span>
                     <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 30 Juta (Min)</h4>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Nikah di Palembang (Kampung)</p>
-                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-slate-200 text-slate-600">Belum Tercapai</span>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Nikah di Palembang</p>
+                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
-                <div id="ms-50" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200">
+                <div id="ms-50" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 col-span-2 md:col-span-1">
                     <span class="text-xl">✨</span>
                     <h4 class="font-bold text-xs mt-1 text-slate-700">Rp 50 Juta (Max)</h4>
                     <p class="text-[10px] text-slate-500 mt-0.5">Pernikahan Ideal Lengkap</p>
-                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-slate-200 text-slate-600">Belum Tercapai</span>
+                    <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
             </div>
 
-            <!-- Tombol Aksi Setor (Sembunyi di Mode AWIN) -->
-            <div id="setorTabunganContainer" class="pt-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-t border-slate-100">
-                <span class="text-xs text-slate-500 font-medium">Catat setoran tabungan nikah baru:</span>
-                <button onclick="tambahTabunganModal()" class="bg-[#CCD5AE] hover:brightness-95 text-[#2B2D42] px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus text-xs"></i> Setor Tabungan Nikah
+            <!-- Tombol Aksi Setor -->
+            <div id="setorTabunganContainer" class="pt-2 flex justify-between items-center border-t border-slate-100">
+                <span class="text-xs text-slate-500">Catat setoran tabungan nikah baru:</span>
+                <button onclick="tambahTabunganModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">
+                    + Setor Tabungan Nikah
                 </button>
-            </div>
-
-            <!-- Ringkasan Statistik & Kelola Foto/PNG khusus Admin AWIN -->
-            <div id="adminStatsCircleContainer" class="hidden pt-4 border-t border-slate-100">
-                <p class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5">
-                    <i class="fa-solid fa-chart-pie text-slate-500"></i> Ringkasan Statistik Tabungan & Rasio Pengeluaran
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <!-- Progress Tabungan Ring Target -->
-                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/60 flex items-center gap-4">
-                        <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path id="ringProgressTabungan" class="text-emerald-500 transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            </svg>
-                            <span id="percentTabunganText" class="absolute text-[11px] font-black text-slate-700">0%</span>
-                        </div>
-                        <div>
-                            <p class="text-[11px] text-slate-500 font-medium">Target Tabungan</p>
-                            <p id="statTotalTabungan" class="text-xs font-black text-slate-800 mt-0.5">Rp 0</p>
-                            <span class="text-[10px] text-slate-400">dari Rp 50.000.000</span>
-                        </div>
-                    </div>
-
-                    <!-- Ring Pengeluaran Firdaus -->
-                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/60 flex items-center gap-4">
-                        <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path id="ringProgressPria" class="text-[#90E0EF] transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            </svg>
-                            <span id="percentPriaText" class="absolute text-[11px] font-black text-slate-700">0%</span>
-                        </div>
-                        <div>
-                            <p class="text-[11px] text-slate-500 font-medium">Pakai Makan (Firdaus)</p>
-                            <p id="statPriaPengeluaran" class="text-xs font-black text-slate-800 mt-0.5">Rp 0</p>
-                            <span class="text-[10px] text-slate-400">Jatah: Rp 1,5 Juta</span>
-                        </div>
-                    </div>
-
-                    <!-- Ring Pengeluaran Viranti -->
-                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/60 flex items-center gap-4">
-                        <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path id="ringProgressWanita" class="text-[#FFCAD4] transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            </svg>
-                            <span id="percentWanitaText" class="absolute text-[11px] font-black text-slate-700">0%</span>
-                        </div>
-                        <div>
-                            <p class="text-[11px] text-slate-500 font-medium">Pakai Makan (Viranti)</p>
-                            <p id="statWanitaPengeluaran" class="text-xs font-black text-slate-800 mt-0.5">Rp 0</p>
-                            <span class="text-[10px] text-slate-400">Jatah: Rp 1,5 Juta</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Panel Kelola Foto Profil & PNG Banner Khusus Admin AWIN -->
-                <div class="mt-4 p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                        <h5 class="text-xs font-bold flex items-center gap-2 text-slate-200">
-                            <i class="fa-solid fa-sliders text-[#90E0EF]"></i> Admin Control: Upload Foto & PNG Banner
-                        </h5>
-                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">Firebase Cloud Sync</span>
-                    </div>
-
-                    <!-- 1. Upload Foto Profil User -->
-                    <div>
-                        <p class="text-[11px] font-bold text-slate-400 mb-2">1. Ganti Foto Profil Avatar (3 Device)</p>
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-slate-700/60">
-                                <p class="text-[10px] font-bold text-[#B5E2FA] mb-1">Firdaus</p>
-                                <button onclick="triggerAdminAvatarUpload('pria')" class="w-full bg-[#B5E2FA] text-[#2B2D42] text-[10px] font-bold py-1.5 rounded-lg hover:brightness-110">
-                                    📤 Upload Foto
-                                </button>
-                            </div>
-                            <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-slate-700/60">
-                                <p class="text-[10px] font-bold text-[#FFCAD4] mb-1">Viranti</p>
-                                <button onclick="triggerAdminAvatarUpload('wanita')" class="w-full bg-[#FFCAD4] text-[#4A4E69] text-[10px] font-bold py-1.5 rounded-lg hover:brightness-110">
-                                    📤 Upload Foto
-                                </button>
-                            </div>
-                            <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-slate-700/60">
-                                <p class="text-[10px] font-bold text-slate-300 mb-1">AWIN</p>
-                                <button onclick="triggerAdminAvatarUpload('admin')" class="w-full bg-slate-700 text-white text-[10px] font-bold py-1.5 rounded-lg hover:bg-slate-600">
-                                    📤 Upload Foto
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Upload Custom PNG Banner -->
-                    <div class="border-t border-slate-800/80 pt-3">
-                        <p class="text-[11px] font-bold text-slate-400 mb-2">2. Ganti PNG Custom Banner Pojok Kanan</p>
-                        <div class="flex flex-col sm:flex-row items-center gap-2">
-                            <button onclick="document.getElementById('bannerPngInput').click()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-[11px] px-4 py-2 rounded-xl transition-all flex items-center justify-center gap-1.5">
-                                🖼️ Ganti PNG Banner Custom
-                            </button>
-                            <button onclick="resetBannerPng()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[10px] px-3 py-2 rounded-xl border border-slate-700">
-                                Reset Ke Ikon Default (💍)
-                            </button>
-                        </div>
-                        <p class="text-[10px] text-slate-500 mt-1">Upload gambar PNG transparan dari HP/Laptop untuk menggantikan ikon default di banner.</p>
-                    </div>
-
-                    <!-- Hidden File Inputs -->
-                    <input type="file" id="adminAvatarFileInput" accept="image/*" class="hidden" onchange="handleAdminAvatarSelected(event)">
-                    <input type="file" id="bannerPngInput" accept="image/png,image/*" class="hidden" onchange="handleBannerPngUpload(event)">
-                </div>
             </div>
 
             <!-- Tabel Riwayat Setoran Tabungan Bersama -->
             <div class="mt-4 pt-4 border-t border-slate-100">
-                <h4 class="font-bold text-sm text-slate-800 mb-2 flex items-center gap-2">
-                    📜 Riwayat Setoran Tabungan Bersama
-                </h4>
-                <div class="overflow-x-auto max-h-[220px] overflow-y-auto rounded-xl border border-slate-100">
+                <h4 class="font-bold text-sm text-slate-800 mb-2">Riwayat Setoran Tabungan Bersama</h4>
+                <div class="overflow-x-auto max-h-[220px] overflow-y-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead class="sticky top-0 bg-slate-50">
-                            <tr class="border-b border-slate-200 text-xs text-slate-400">
-                                <th class="p-2.5 font-semibold">Tanggal Setor</th>
-                                <th class="p-2.5 font-semibold">Penyetor</th>
-                                <th class="p-2.5 font-semibold text-right">Nominal Setoran</th>
-                                <th class="p-2.5 font-semibold text-center">Aksi</th>
+                        <thead>
+                            <tr class="border-b border-slate-100 text-xs text-slate-400">
+                                <th class="pb-2 font-semibold">Tanggal Setor</th>
+                                <th class="pb-2 font-semibold">Penyetor</th>
+                                <th class="pb-2 font-semibold text-right">Nominal Setoran</th>
+                                <th class="pb-2 font-semibold text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="tabungan-history-list" class="text-xs divide-y divide-slate-100">
+                        <tbody id="tabungan-history-list" class="text-xs divide-y divide-slate-50">
                             <tr><td colspan="4" class="text-center py-4 text-slate-400 text-xs">Memuat data...</td></tr>
                         </tbody>
                     </table>
@@ -389,50 +250,50 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Form Catat Pengeluaran -->
             <div id="expenseFormContainer" class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-1 h-fit">
-                <h3 class="font-bold text-base text-slate-800 mb-1">📝 Catat Pengeluaran Makan</h3>
+                <h3 class="font-bold text-base text-slate-800 mb-1">Catat Pengeluaran Makan</h3>
                 <p class="text-xs text-slate-500 mb-4">Akan memotong jatah makan Rp 1,5 Juta.</p>
 
                 <form id="expense-form" onsubmit="addExpense(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Nominal (Rp)</label>
                         <input type="text" id="amount" placeholder="Contoh: 25.000" required onkeyup="formatRupiahInput(this)"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#90E0EF] transition-all">
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-slate-400">
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan / Menu</label>
                         <input type="text" id="description" placeholder="Misal: Nasi Padang / Ayam Geprek" required
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#90E0EF] transition-all">
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400">
                     </div>
 
-                    <button type="submit" id="submit-btn" class="w-full bg-[#B5E2FA] hover:brightness-95 text-[#2B2D42] font-bold py-3 rounded-xl text-sm transition-all shadow-md">
+                    <button type="submit" id="submit-btn" class="w-full font-bold py-3 rounded-xl text-sm transition-all shadow-md">
                         Potong Jatah Makan
                     </button>
                 </form>
             </div>
 
-            <!-- Riwayat Transaksi Pengeluaran -->
+            <!-- Riwayat Transaksi Pengeluaran Berdua -->
             <div id="historyTableContainer" class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2">
                 <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h3 class="font-bold text-base text-slate-800">📜 Riwayat Pengeluaran Berdua</h3>
+                        <h3 class="font-bold text-base text-slate-800">Riwayat Pengeluaran Berdua</h3>
                         <p class="text-xs text-slate-500">Transparan: Firdaus & Viranti bisa saling melihat</p>
                     </div>
                     <button onclick="resetData()" class="text-xs text-rose-500 hover:underline font-semibold">Reset Data</button>
                 </div>
 
-                <div class="overflow-x-auto max-h-[350px] overflow-y-auto rounded-xl border border-slate-100">
+                <div class="overflow-x-auto max-h-[350px] overflow-y-auto pr-1">
                     <table class="w-full text-left border-collapse">
-                        <thead class="sticky top-0 bg-slate-50">
-                            <tr class="border-b border-slate-200 text-xs text-slate-400">
-                                <th class="p-2.5 font-semibold">Waktu</th>
-                                <th class="p-2.5 font-semibold">Pemilik</th>
-                                <th class="p-2.5 font-semibold">Keterangan</th>
-                                <th class="p-2.5 font-semibold text-right">Nominal</th>
-                                <th class="p-2.5 font-semibold text-center">Aksi</th>
+                        <thead>
+                            <tr class="border-b border-slate-100 text-xs text-slate-400">
+                                <th class="pb-2 font-semibold">Waktu</th>
+                                <th class="pb-2 font-semibold">Pemilik</th>
+                                <th class="pb-2 font-semibold">Keterangan</th>
+                                <th class="pb-2 font-semibold text-right">Nominal</th>
+                                <th class="pb-2 font-semibold text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="transaction-list" class="text-xs divide-y divide-slate-100">
+                        <tbody id="transaction-list" class="text-sm divide-y divide-slate-50">
                             <tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs">Memuat data...</td></tr>
                         </tbody>
                     </table>
@@ -442,22 +303,22 @@
     </main>
 
     <!-- Modal Setor Tabungan -->
-    <div id="modal-tabungan" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 border border-slate-100">
-            <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">💰 Setor Tabungan Bersama</h3>
+    <div id="modal-tabungan" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4">
+            <h3 class="font-bold text-lg text-slate-800">Setor Tabungan Bersama</h3>
             <p class="text-xs text-slate-500">Masukkan nominal setoran tabungan untuk target nikah kalian berdua.</p>
             <form onsubmit="submitTabungan(event)" class="space-y-3">
                 <input type="text" id="tabungan-amount" placeholder="Nominal (Rp)" required onkeyup="formatRupiahInput(this)"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#CCD5AE]">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeTabunganModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 font-bold py-2.5 rounded-xl text-xs text-slate-600 transition-all">Batal</button>
-                    <button type="submit" class="flex-1 bg-[#CCD5AE] hover:brightness-95 font-bold py-2.5 rounded-xl text-xs text-[#2B2D42] transition-all shadow-md">Simpan Setoran</button>
+                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 font-bold py-2.5 rounded-xl text-xs text-white transition-all shadow-md">Simpan Setoran</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs & Script Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -476,24 +337,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let currentUser = 'pria';
+        let currentUser = 'pria'; 
         let appData = {
             pria: { expenses: {} },
             wanita: { expenses: {} },
             tabunganBersamaHistory: {},
-            avatars: {},
-            customBannerPng: null
+            avatars: {}
         };
 
         const JATAH_MAKAN_BULANAN = 1500000;
 
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka || 0);
-        }
-
-        function parseRupiah(str) {
-            return parseInt(str.replace(/[^0-9]/g, '')) || 0;
-        }
+        // --- Helper Functions Global ---
+        window.formatRupiah = function(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+        };
 
         window.formatRupiahInput = function(input) {
             let value = input.value.replace(/[^,\d]/g, '').toString();
@@ -506,213 +363,97 @@
                 rupiah += separator + ribuan.join('.');
             }
             input.value = rupiah;
-        }
+        };
 
-        window.showToastNotification = function(title, message, icon = '✨') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
+        window.parseRupiah = function(str) {
+            return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+        };
 
+        window.showToastNotification = function(title, message, user) {
+            const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `pointer-events-auto bg-white border border-slate-200/80 shadow-xl rounded-2xl p-3.5 flex items-start gap-3 min-w-[260px] animate-toast-in`;
+            
+            let bgClass = "bg-slate-900 text-white border-slate-700";
+            if(user === 'pria') bgClass = "bg-[#2B2D42] text-white border-[#90E0EF]";
+            if(user === 'wanita') bgClass = "bg-[#4A4E69] text-white border-[#FFCAD4]";
+
+            toast.className = `toast-enter flex items-center gap-3 p-4 rounded-2xl shadow-2xl border ${bgClass} transition-all`;
             toast.innerHTML = `
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 bg-slate-100">
-                    ${icon}
-                </div>
+                <div class="text-2xl">✨</div>
                 <div class="flex-1 min-w-0">
-                    <h5 class="text-xs font-bold text-slate-800 leading-tight">${title}</h5>
-                    <p class="text-[11px] text-slate-500 mt-0.5 truncate">${message}</p>
+                    <h5 class="text-xs font-bold leading-tight">${title}</h5>
+                    <p class="text-[11px] opacity-90 truncate mt-0.5">${message}</p>
                 </div>
             `;
 
             container.appendChild(toast);
 
             setTimeout(() => {
-                toast.classList.remove('animate-toast-in');
-                toast.classList.add('animate-toast-out');
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+            }, 3500);
+        };
 
-        // --- Avatar & Banner PNG Sync ---
+        // --- Firebase Listener Realtime ---
+        const dbRef = ref(db, 'keuangan_nikah_data');
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                appData = {
+                    pria: { expenses: data.pria?.expenses || {} },
+                    wanita: { expenses: data.wanita?.expenses || {} },
+                    tabunganBersamaHistory: data.tabunganBersamaHistory || {},
+                    avatars: data.avatars || {}
+                };
+            } else {
+                appData = { pria: { expenses: {} }, wanita: { expenses: {} }, tabunganBersamaHistory: {}, avatars: {} };
+            }
+            updateAvatarDisplay();
+            updateUI();
+        });
+
+        // --- Avatar Cloud Functions ---
+        window.triggerAvatarUpload = function() {
+            document.getElementById('avatarFileInput').click();
+        };
+
+        window.handleAvatarSelected = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Ukuran gambar terlalu besar! Harap pilih gambar di bawah 2MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Image = evt.target.result;
+                set(ref(db, `keuangan_nikah_data/avatars/${currentUser}`), base64Image);
+                showToastNotification("Foto Profil Diperbarui", "Foto tersimpan ke cloud untuk 3 device!", currentUser);
+            };
+            reader.readAsDataURL(file);
+        };
+
         window.updateAvatarDisplay = function() {
-            const avatarImg = document.getElementById('avatarImg');
-            if (!avatarImg) return;
-            const firebaseAvatar = appData.avatars ? appData.avatars[currentUser] : null;
+            const imgEl = document.getElementById('headerAvatarImg');
+            const savedAvatar = appData.avatars && appData.avatars[currentUser];
 
-            if (firebaseAvatar) {
-                avatarImg.src = firebaseAvatar;
+            if (savedAvatar) {
+                imgEl.src = savedAvatar;
             } else {
                 if (currentUser === 'pria') {
-                    avatarImg.src = "https://placehold.co/100x100/90E0EF/2B2D42?text=FD";
+                    imgEl.src = "https://ui-avatars.com/api/?name=Firdaus&background=90E0EF&color=2B2D42";
                 } else if (currentUser === 'wanita') {
-                    avatarImg.src = "https://placehold.co/100x100/FFCAD4/4A4E69?text=VR";
+                    imgEl.src = "https://ui-avatars.com/api/?name=Viranti&background=FFCAD4&color=4A4E69";
                 } else {
-                    avatarImg.src = "https://placehold.co/100x100/1E293B/FFFFFF?text=AWIN";
+                    imgEl.src = "https://ui-avatars.com/api/?name=AWIN&background=334155&color=ffffff";
                 }
             }
+        };
 
-            // Update PNG Custom Banner
-            const bannerIconPng = document.getElementById('bannerIconPng');
-            const bannerFallbackIcon = document.getElementById('bannerFallbackIcon');
-            
-            if (appData.customBannerPng) {
-                bannerIconPng.src = appData.customBannerPng;
-                bannerIconPng.classList.remove('hidden');
-                bannerFallbackIcon.classList.add('hidden');
-            } else {
-                bannerIconPng.classList.add('hidden');
-                bannerFallbackIcon.classList.remove('hidden');
-            }
-        }
-
-        window.handleAvatarUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 1024 * 1024) {
-                alert("Ukuran foto terlalu besar. Gunakan foto di bawah 1 MB ya!");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Image = e.target.result;
-                set(ref(db, `keuangan_nikah_data/avatars/${currentUser}`), base64Image);
-                showToastNotification('Foto Profil Diperbarui! ✨', 'Foto profil tersimpan & tersinkron di semua HP/Laptop.', '📸');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        let targetAdminUserUpload = 'pria';
-
-        window.triggerAdminAvatarUpload = function(targetUser) {
-            targetAdminUserUpload = targetUser;
-            document.getElementById('adminAvatarFileInput').click();
-        }
-
-        window.handleAdminAvatarSelected = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 1024 * 1024) {
-                alert("Ukuran foto terlalu besar. Gunakan foto di bawah 1 MB ya!");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Image = e.target.result;
-                set(ref(db, `keuangan_nikah_data/avatars/${targetAdminUserUpload}`), base64Image);
-                const targetName = targetAdminUserUpload === 'pria' ? 'Firdaus' : (targetAdminUserUpload === 'wanita' ? 'Viranti' : 'AWIN');
-                showToastNotification('Foto Berhasil Diubah! 📸', `Foto profil ${targetName} tersimpan di Firebase.`, '✨');
-            };
-            reader.readAsDataURL(file);
-            event.target.value = '';
-        }
-
-        // --- Custom Banner PNG Upload ---
-        window.handleBannerPngUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 1.5 * 1024 * 1024) {
-                alert("Ukuran PNG terlalu besar. Gunakan file di bawah 1.5 MB!");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Png = e.target.result;
-                set(ref(db, 'keuangan_nikah_data/customBannerPng'), base64Png);
-                showToastNotification('PNG Banner Diubah! 🖼️', 'Tampilan PNG banner tersinkron ke semua device.', '✨');
-            };
-            reader.readAsDataURL(file);
-            event.target.value = '';
-        }
-
-        window.resetBannerPng = function() {
-            set(ref(db, 'keuangan_nikah_data/customBannerPng'), null);
-            showToastNotification('Banner Direset 💍', 'PNG banner kembali ke ikon default.', 'ℹ️');
-        }
-
-        // --- Actions ---
-        window.tambahTabunganModal = function() {
-            document.getElementById('modal-tabungan').classList.remove('hidden');
-            document.getElementById('modal-tabungan').classList.add('flex');
-        }
-
-        window.closeTabunganModal = function() {
-            document.getElementById('modal-tabungan').classList.remove('flex');
-            document.getElementById('modal-tabungan').classList.add('hidden');
-        }
-
-        window.addExpense = function(e) {
-            e.preventDefault();
-            if (currentUser === 'admin') return;
-
-            const amountStr = document.getElementById('amount').value;
-            const desc = document.getElementById('description').value;
-            const amount = parseRupiah(amountStr);
-
-            if (amount <= 0) return;
-
-            const newTxRef = push(ref(db, `keuangan_nikah_data/${currentUser}/expenses`));
-            set(newTxRef, {
-                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
-                desc: desc,
-                amount: amount,
-                timestamp: Date.now()
-            });
-
-            const userName = currentUser === 'pria' ? 'Firdaus' : 'Viranti';
-            showToastNotification('Pengeluaran Dicatat! 🍱', `${userName} mencatat ${desc} (${formatRupiah(amount)})`, '🍱');
-
-            document.getElementById('amount').value = '';
-            document.getElementById('description').value = '';
-        }
-
-        window.deleteExpense = function(user, id) {
-            if (currentUser !== 'admin' && user !== currentUser) {
-                alert("Kamu hanya bisa menghapus data milikmu sendiri demi privasi & kontrol masing-masing!");
-                return;
-            }
-            remove(ref(db, `keuangan_nikah_data/${user}/expenses/${id}`));
-            showToastNotification('Data Dihapus', 'Pengeluaran berhasil dihapus.', '🗑️');
-        }
-
-        window.submitTabungan = function(e) {
-            e.preventDefault();
-            const amountStr = document.getElementById('tabungan-amount').value;
-            const amount = parseRupiah(amountStr);
-            if (amount <= 0) return;
-
-            const newTabunganRef = push(ref(db, 'keuangan_nikah_data/tabunganBersamaHistory'));
-            set(newTabunganRef, {
-                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                user: currentUser,
-                amount: amount,
-                timestamp: Date.now()
-            });
-
-            closeTabunganModal();
-            document.getElementById('tabungan-amount').value = '';
-            const userName = currentUser === 'pria' ? 'Firdaus' : (currentUser === 'wanita' ? 'Viranti' : 'AWIN');
-            showToastNotification('Setoran Tabungan Berhasil! 💰', `${userName} menyetor ${formatRupiah(amount)}`, '💎');
-        }
-
-        window.deleteTabungan = function(id) {
-            remove(ref(db, `keuangan_nikah_data/tabunganBersamaHistory/${id}`));
-            showToastNotification('Setoran Dihapus', 'Riwayat setoran tabungan berhasil dihapus.', '🗑️');
-        }
-
-        window.resetData = function() {
-            if (confirm("Yakin ingin mereset seluruh data catatan bersama di cloud?")) {
-                set(ref(db, 'keuangan_nikah_data'), null);
-                showToastNotification('Data Direset', 'Seluruh data cloud telah dibersihkan.', '⚠️');
-            }
-        }
-
-        // --- Switch User Functionality ---
+        // --- Switch User ---
         window.switchUser = function(user) {
             currentUser = user;
             const appBody = document.getElementById('appBody');
@@ -733,8 +474,12 @@
             const setorTabunganContainer = document.getElementById('setorTabunganContainer');
             const adminStatsCircleContainer = document.getElementById('adminStatsCircleContainer');
 
+            const pinguinPria = document.getElementById('pinguinPria');
+            const pinguinWanita = document.getElementById('pinguinWanita');
+            const pinguinAdminPair = document.getElementById('pinguinAdminPair');
+
             if (user === 'pria') {
-                appBody.className = "theme-pria min-h-screen pb-12";
+                appBody.className = "theme-pria min-h-screen pb-12 bg-slate-50 text-slate-800";
                 
                 btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#B5E2FA] text-[#2B2D42]";
                 btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
@@ -756,8 +501,12 @@
                 adminStatsCircleContainer.classList.add('hidden');
                 historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
 
+                if(pinguinPria) pinguinPria.classList.remove('hidden');
+                if(pinguinWanita) pinguinWanita.classList.add('hidden');
+                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
+
             } else if (user === 'wanita') {
-                appBody.className = "theme-wanita min-h-screen pb-12";
+                appBody.className = "theme-wanita min-h-screen pb-12 bg-slate-50 text-slate-800";
                 
                 btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#FFCAD4] text-[#4A4E69]";
                 btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
@@ -779,8 +528,12 @@
                 adminStatsCircleContainer.classList.add('hidden');
                 historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
 
+                if(pinguinPria) pinguinPria.classList.add('hidden');
+                if(pinguinWanita) pinguinWanita.classList.remove('hidden');
+                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
+
             } else if (user === 'admin') {
-                appBody.className = "theme-admin min-h-screen pb-12";
+                appBody.className = "theme-admin min-h-screen pb-12 bg-slate-50 text-slate-800";
 
                 btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-slate-900 text-white flex items-center gap-1";
                 btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
@@ -799,31 +552,95 @@
                 setorTabunganContainer.classList.add('hidden');
                 adminStatsCircleContainer.classList.remove('hidden');
                 historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-3";
+
+                if(pinguinPria) pinguinPria.classList.add('hidden');
+                if(pinguinWanita) pinguinWanita.classList.add('hidden');
+                if(pinguinAdminPair) pinguinAdminPair.classList.remove('hidden');
             }
 
             updateAvatarDisplay();
             updateUI();
-        }
+        };
 
-        // Firebase Realtime Listener
-        const dbRef = ref(db, 'keuangan_nikah_data');
-        onValue(dbRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                appData = {
-                    pria: { expenses: data.pria?.expenses || {} },
-                    wanita: { expenses: data.wanita?.expenses || {} },
-                    tabunganBersamaHistory: data.tabunganBersamaHistory || {},
-                    avatars: data.avatars || {},
-                    customBannerPng: data.customBannerPng || null
-                };
-            } else {
-                appData = { pria: { expenses: {} }, wanita: { expenses: {} }, tabunganBersamaHistory: {}, avatars: {}, customBannerPng: null };
+        // --- Add Expense ---
+        window.addExpense = function(e) {
+            e.preventDefault();
+            const amountStr = document.getElementById('amount').value;
+            const desc = document.getElementById('description').value;
+            const amount = parseRupiah(amountStr);
+
+            if (amount <= 0) return;
+
+            const newTxRef = push(ref(db, `keuangan_nikah_data/${currentUser}/expenses`));
+            set(newTxRef, {
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                desc: desc,
+                amount: amount,
+                timestamp: Date.now()
+            });
+
+            document.getElementById('amount').value = '';
+            document.getElementById('description').value = '';
+
+            const uName = currentUser === 'pria' ? 'Firdaus' : 'Viranti';
+            showToastNotification("Pengeluaran Dicatat!", `${uName} mencatat ${desc} (${formatRupiah(amount)})`, currentUser);
+        };
+
+        window.deleteExpense = function(user, id) {
+            if (currentUser !== 'admin' && user !== currentUser) {
+                alert("Kamu hanya bisa menghapus data milikmu sendiri demi privasi & kontrol masing-masing!");
+                return;
             }
-            updateAvatarDisplay();
-            updateUI();
-        });
+            if (confirm("Yakin ingin menghapus item pengeluaran ini?")) {
+                remove(ref(db, `keuangan_nikah_data/${user}/expenses/${id}`));
+            }
+        };
 
+        // --- Tabungan Modal ---
+        window.tambahTabunganModal = function() {
+            document.getElementById('modal-tabungan').classList.remove('hidden');
+            document.getElementById('modal-tabungan').classList.add('flex');
+        };
+
+        window.closeTabunganModal = function() {
+            document.getElementById('modal-tabungan').classList.remove('flex');
+            document.getElementById('modal-tabungan').classList.add('hidden');
+        };
+
+        window.submitTabungan = function(e) {
+            e.preventDefault();
+            const amountStr = document.getElementById('tabungan-amount').value;
+            const amount = parseRupiah(amountStr);
+            if (amount <= 0) return;
+
+            const newTabunganRef = push(ref(db, 'keuangan_nikah_data/tabunganBersamaHistory'));
+            set(newTabunganRef, {
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                user: currentUser,
+                amount: amount,
+                timestamp: Date.now()
+            });
+
+            closeTabunganModal();
+            document.getElementById('tabungan-amount').value = '';
+
+            const uName = currentUser === 'pria' ? 'Firdaus' : 'Viranti';
+            showToastNotification("Setoran Berhasil!", `${uName} menyetor ${formatRupiah(amount)} ke tabungan nikah.`, currentUser);
+        };
+
+        window.deleteTabungan = function(id) {
+            if (confirm("Hapus catatan setoran tabungan ini?")) {
+                remove(ref(db, `keuangan_nikah_data/tabunganBersamaHistory/${id}`));
+            }
+        };
+
+        window.resetData = function() {
+            if (confirm("Yakin ingin mereset seluruh data catatan bersama di cloud?")) {
+                set(ref(db, 'keuangan_nikah_data'), null);
+            }
+        };
+
+        // --- Render UI Data Sync ---
         function updateUI() {
             const priaExpensesObj = appData.pria.expenses || {};
             const wanitaExpensesObj = appData.wanita.expenses || {};
@@ -837,15 +654,19 @@
 
             if (currentUser === 'pria') {
                 document.getElementById('sisa-makan-display').innerText = formatRupiah(sisaPria);
-                document.getElementById('total-pengeluaran-user').innerText = formatRupiah(totalKeluarPria);
+                document.getElementById('total-pengeluaran-display').innerText = formatRupiah(totalKeluarPria);
             } else if (currentUser === 'wanita') {
                 document.getElementById('sisa-makan-display').innerText = formatRupiah(sisaWanita);
-                document.getElementById('total-pengeluaran-user').innerText = formatRupiah(totalKeluarWanita);
-            } else {
-                document.getElementById('sisa-makan-display').innerText = formatRupiah(sisaPria + sisaWanita);
-                document.getElementById('total-pengeluaran-user').innerText = formatRupiah(totalKeluarPria + totalKeluarWanita);
+                document.getElementById('total-pengeluaran-display').innerText = formatRupiah(totalKeluarWanita);
+            } else if (currentUser === 'admin') {
+                const totalSisaGabungan = sisaPria + sisaWanita;
+                const totalPengeluaranGabungan = totalKeluarPria + totalKeluarWanita;
+
+                document.getElementById('sisa-makan-display').innerText = formatRupiah(totalSisaGabungan);
+                document.getElementById('total-pengeluaran-display').innerText = formatRupiah(totalPengeluaranGabungan);
             }
 
+            // Tabungan & Progress
             const tabunganArr = Object.entries(tabunganObj).map(([id, val]) => ({ id, ...val }));
             const totalTabungan = tabunganArr.reduce((sum, item) => sum + item.amount, 0);
             document.getElementById('total-tabungan-bersama').innerText = formatRupiah(totalTabungan);
@@ -854,22 +675,30 @@
             if (percent > 100) percent = 100;
             document.getElementById('progress-bar').style.width = percent + '%';
 
-            // Update Ring Circles AWIN
-            const percentTabunganVal = Math.min(Math.round((totalTabungan / 50000000) * 100), 100);
-            const percentPriaVal = Math.min(Math.round((totalKeluarPria / JATAH_MAKAN_BULANAN) * 100), 100);
-            const percentWanitaVal = Math.min(Math.round((totalKeluarWanita / JATAH_MAKAN_BULANAN) * 100), 100);
+            // Admin Stats Circles
+            const circleTarget = document.getElementById('circle-progress-target');
+            const circleTextTarget = document.getElementById('circle-text-target');
+            if (circleTarget && circleTextTarget) {
+                const pctTarget = Math.min(Math.round((totalTabungan / 50000000) * 100), 100);
+                circleTarget.setAttribute('stroke-dasharray', `${pctTarget}, 100`);
+                circleTextTarget.innerText = `${pctTarget}%`;
+            }
 
-            document.getElementById('percentTabunganText').innerText = percentTabunganVal + '%';
-            document.getElementById('ringProgressTabungan').setAttribute('stroke-dasharray', `${percentTabunganVal}, 100`);
-            document.getElementById('statTotalTabungan').innerText = formatRupiah(totalTabungan);
+            const circlePria = document.getElementById('circle-progress-pria');
+            const circleTextPria = document.getElementById('circle-text-pria');
+            if (circlePria && circleTextPria) {
+                const pctPria = Math.min(Math.round((totalKeluarPria / JATAH_MAKAN_BULANAN) * 100), 100);
+                circlePria.setAttribute('stroke-dasharray', `${pctPria}, 100`);
+                circleTextPria.innerText = `${pctPria}%`;
+            }
 
-            document.getElementById('percentPriaText').innerText = percentPriaVal + '%';
-            document.getElementById('ringProgressPria').setAttribute('stroke-dasharray', `${percentPriaVal}, 100`);
-            document.getElementById('statPriaPengeluaran').innerText = formatRupiah(totalKeluarPria);
-
-            document.getElementById('percentWanitaText').innerText = percentWanitaVal + '%';
-            document.getElementById('ringProgressWanita').setAttribute('stroke-dasharray', `${percentWanitaVal}, 100`);
-            document.getElementById('statWanitaPengeluaran').innerText = formatRupiah(totalKeluarWanita);
+            const circleWanita = document.getElementById('circle-progress-wanita');
+            const circleTextWanita = document.getElementById('circle-text-wanita');
+            if (circleWanita && circleTextWanita) {
+                const pctWanita = Math.min(Math.round((totalKeluarWanita / JATAH_MAKAN_BULANAN) * 100), 100);
+                circleWanita.setAttribute('stroke-dasharray', `${pctWanita}, 100`);
+                circleTextWanita.innerText = `${pctWanita}%`;
+            }
 
             updateMilestoneStatus(5000000, 'ms-5', totalTabungan);
             updateMilestoneStatus(10000000, 'ms-10', totalTabungan);
@@ -877,7 +706,7 @@
             updateMilestoneStatus(30000000, 'ms-30', totalTabungan);
             updateMilestoneStatus(50000000, 'ms-50', totalTabungan);
 
-            // Render Tabungan History
+            // Render Tabungan History Table
             const tabunganTbody = document.getElementById('tabungan-history-list');
             tabunganTbody.innerHTML = '';
 
@@ -885,29 +714,23 @@
                 tabunganTbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400 text-xs">Belum ada riwayat setoran tabungan.</td></tr>`;
             } else {
                 tabunganArr.sort((a, b) => b.timestamp - a.timestamp).forEach(item => {
-                    let penyetorBadge = item.user === 'pria' 
-                        ? '<span class="bg-[#B5E2FA]/50 text-[#2B2D42] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#90E0EF]">Firdaus</span>' 
-                        : (item.user === 'wanita' 
-                            ? '<span class="bg-[#FFCAD4]/50 text-[#4A4E69] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#FDE2E4]">Viranti</span>'
-                            : '<span class="bg-slate-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">AWIN</span>');
+                    let penyetorBadge = item.user === 'pria' ? '<span class="bg-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Firdaus</span>' : '<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Viranti</span>';
                     
-                    let canDelete = currentUser === 'admin' || item.user === currentUser;
-
                     let tr = document.createElement('tr');
-                    tr.className = "border-b border-slate-100 hover:bg-slate-50 transition-all text-xs";
+                    tr.className = "border-b border-slate-50 hover:bg-slate-50/50 transition-all text-xs";
                     tr.innerHTML = `
-                        <td class="p-2.5 text-slate-500 font-medium">${item.date}</td>
-                        <td class="p-2.5">${penyetorBadge}</td>
-                        <td class="p-2.5 text-right font-extrabold text-emerald-600">+ ${formatRupiah(item.amount)}</td>
-                        <td class="p-2.5 text-center">
-                            ${canDelete ? `<button onclick="deleteTabungan('${item.id}')" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>` : `<span class="text-slate-300 text-[10px] italic">Terkunci</span>`}
+                        <td class="py-2.5 text-slate-500">${item.date}</td>
+                        <td class="py-2.5">${penyetorBadge}</td>
+                        <td class="py-2.5 text-right font-bold text-emerald-600">+ ${formatRupiah(item.amount)}</td>
+                        <td class="py-2.5 text-center">
+                            <button onclick="deleteTabungan('${item.id}')" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>
                         </td>
                     `;
                     tabunganTbody.appendChild(tr);
                 });
             }
 
-            // Render Transaksi Pengeluaran Makan
+            // Render Transaksi Makan Table
             const priaArr = Object.entries(priaExpensesObj).map(([id, val]) => ({ id, owner: 'Firdaus', userKey: 'pria', ...val }));
             const wanitaArr = Object.entries(wanitaExpensesObj).map(([id, val]) => ({ id, owner: 'Viranti', userKey: 'wanita', ...val }));
             const allTx = [...priaArr, ...wanitaArr].sort((a, b) => b.timestamp - a.timestamp);
@@ -921,20 +744,17 @@
             }
 
             allTx.forEach(tx => {
-                let badgeOwner = tx.owner === 'Firdaus' 
-                    ? '<span class="bg-[#B5E2FA]/50 text-[#2B2D42] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#90E0EF]">Firdaus</span>' 
-                    : '<span class="bg-[#FFCAD4]/50 text-[#4A4E69] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#FDE2E4]">Viranti</span>';
-                
+                let badgeOwner = tx.owner === 'Firdaus' ? '<span class="bg-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Firdaus</span>' : '<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Viranti</span>';
                 let canDelete = currentUser === 'admin' || tx.userKey === currentUser;
 
                 let tr = document.createElement('tr');
-                tr.className = "border-b border-slate-100 hover:bg-slate-50 transition-all text-xs";
+                tr.className = "border-b border-slate-50 hover:bg-slate-50/50 transition-all text-xs";
                 tr.innerHTML = `
-                    <td class="p-2.5 text-slate-500 font-medium">${tx.date}</td>
-                    <td class="p-2.5">${badgeOwner}</td>
-                    <td class="p-2.5 font-bold text-slate-700">${tx.desc}</td>
-                    <td class="p-2.5 text-right font-extrabold text-rose-500">- ${formatRupiah(tx.amount)}</td>
-                    <td class="p-2.5 text-center">
+                    <td class="py-3 text-slate-500">${tx.date}</td>
+                    <td class="py-3">${badgeOwner}</td>
+                    <td class="py-3 font-medium text-slate-700">${tx.desc}</td>
+                    <td class="py-3 text-right font-bold text-slate-800">- ${formatRupiah(tx.amount)}</td>
+                    <td class="py-3 text-center">
                         ${canDelete ? `<button onclick="deleteExpense('${tx.userKey}', '${tx.id}')" class="text-slate-400 hover:text-rose-600 font-bold px-1.5 py-0.5">✕</button>` : `<span class="text-slate-300 text-[10px] italic">Terkunci</span>`}
                     </td>
                 `;
@@ -944,17 +764,21 @@
 
         function updateMilestoneStatus(targetVal, elementId, currentVal) {
             const el = document.getElementById(elementId);
+            if (!el) return;
             const badge = el.querySelector('.status-badge');
             if (currentVal >= targetVal) {
-                el.className = "border rounded-2xl p-3 text-center transition-all bg-[#CCD5AE]/30 border-[#CCD5AE] shadow-sm";
-                badge.className = "status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-[#CCD5AE] text-[#2B2D42]";
+                el.className = "border rounded-2xl p-3 text-center transition-all bg-emerald-50 border-emerald-300 shadow-sm";
+                badge.className = "status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-emerald-600 text-white";
                 badge.innerText = "Tercapai! ✨";
             } else {
                 el.className = "border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200";
-                badge.className = "status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded-lg bg-slate-200 text-slate-600";
+                badge.className = "status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600";
                 badge.innerText = "Belum Tercapai";
             }
         }
     </script>
 </body>
 </html>
+```
+
+Seluruh kode aplikasi telah dimuat ulang secara utuh dan siap Anda salin ke repositori GitHub.
