@@ -182,6 +182,28 @@
                         <span class="text-[11px] font-semibold text-slate-600 mt-2">Jatah Makan Viranti</span>
                     </div>
                 </div>
+
+                <!-- Panel Admin Control Upload Foto ALL Device -->
+                <div class="mt-4 pt-4 border-t border-slate-200/80 bg-slate-900 text-white rounded-2xl p-4">
+                    <h5 class="font-bold text-xs text-sky-400 mb-2 flex items-center gap-1.5">
+                        ⚡ Admin Control: Upload Foto Profil & PNG Banner (Realtime Sync 3 Device)
+                    </h5>
+                    <p class="text-[11px] text-slate-300 mb-3">Upload gambar langsung tersimpan ke Cloud Database Firebase tanpa perlu URL Imgur!</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <button onclick="uploadSpecificAsset('pria')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            📷 Foto Firdaus
+                        </button>
+                        <button onclick="uploadSpecificAsset('wanita')" class="bg-pink-600 hover:bg-pink-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            📷 Foto Viranti
+                        </button>
+                        <button onclick="uploadSpecificAsset('admin')" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            📷 Foto Admin
+                        </button>
+                        <button onclick="uploadSpecificAsset('bannerCustom')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
+                            🖼️ PNG Banner
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Milestone List -->
@@ -342,9 +364,11 @@
             pria: { expenses: {} },
             wanita: { expenses: {} },
             tabunganBersamaHistory: {},
-            avatars: {}
+            avatars: {},
+            bannerCustom: null
         };
 
+        let currentUploadTarget = null;
         const JATAH_MAKAN_BULANAN = 1500000;
 
         // --- Helper Functions Global ---
@@ -371,6 +395,7 @@
 
         window.showToastNotification = function(title, message, user) {
             const container = document.getElementById('toast-container');
+            if(!container) return;
             const toast = document.createElement('div');
             
             let bgClass = "bg-slate-900 text-white border-slate-700";
@@ -395,6 +420,168 @@
             }, 3500);
         };
 
+        // --- Avatar Cloud Functions ---
+        window.triggerAvatarUpload = function() {
+            currentUploadTarget = currentUser;
+            document.getElementById('avatarFileInput').click();
+        };
+
+        window.uploadSpecificAsset = function(targetKey) {
+            currentUploadTarget = targetKey;
+            document.getElementById('avatarFileInput').click();
+        };
+
+        window.handleAvatarSelected = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Ukuran gambar terlalu besar! Harap pilih gambar di bawah 2MB.");
+                return;
+            }
+
+            const targetKey = currentUploadTarget || currentUser;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Image = evt.target.result;
+                if (targetKey === 'bannerCustom') {
+                    set(ref(db, `keuangan_nikah_data/bannerCustom`), base64Image);
+                    showToastNotification("PNG Banner Diperbarui", "Banner custom tersimpan untuk 3 device!", currentUser);
+                } else {
+                    set(ref(db, `keuangan_nikah_data/avatars/${targetKey}`), base64Image);
+                    showToastNotification("Foto Profil Diperbarui", `Foto ${targetKey} tersimpan untuk 3 device!`, currentUser);
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.updateAvatarDisplay = function() {
+            const imgEl = document.getElementById('headerAvatarImg');
+            if (!imgEl) return;
+            const savedAvatar = appData.avatars && appData.avatars[currentUser];
+
+            if (savedAvatar) {
+                imgEl.src = savedAvatar;
+            } else {
+                if (currentUser === 'pria') {
+                    imgEl.src = "https://ui-avatars.com/api/?name=Firdaus&background=90E0EF&color=2B2D42";
+                } else if (currentUser === 'wanita') {
+                    imgEl.src = "https://ui-avatars.com/api/?name=Viranti&background=FFCAD4&color=4A4E69";
+                } else {
+                    imgEl.src = "https://ui-avatars.com/api/?name=AWIN&background=334155&color=ffffff";
+                }
+            }
+        };
+
+        // --- Switch User ---
+        window.switchUser = function(user) {
+            currentUser = user;
+            const appBody = document.getElementById('appBody');
+            const btnPria = document.getElementById('btn-pria');
+            const btnWanita = document.getElementById('btn-wanita');
+            const btnAdmin = document.getElementById('btn-admin');
+            
+            const bannerCard = document.getElementById('bannerCard');
+            const badge = document.getElementById('active-user-badge');
+            const title = document.getElementById('active-user-title');
+            const bannerSubtitle = document.getElementById('bannerSubtitle');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            const labelMetric1 = document.getElementById('label-metric-1');
+            const labelMetric2 = document.getElementById('label-metric-2');
+            const expenseFormContainer = document.getElementById('expenseFormContainer');
+            const historyTableContainer = document.getElementById('historyTableContainer');
+            const setorTabunganContainer = document.getElementById('setorTabunganContainer');
+            const adminStatsCircleContainer = document.getElementById('adminStatsCircleContainer');
+
+            const pinguinPria = document.getElementById('pinguinPria');
+            const pinguinWanita = document.getElementById('pinguinWanita');
+            const pinguinAdminPair = document.getElementById('pinguinAdminPair');
+
+            if (user === 'pria') {
+                appBody.className = "theme-pria min-h-screen pb-12 bg-slate-50 text-slate-800";
+                
+                btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#B5E2FA] text-[#2B2D42]";
+                btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
+                btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-500 hover:bg-slate-200 flex items-center gap-1";
+
+                bannerCard.className = "rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#90E0EF] to-[#B5E2FA] text-[#2B2D42]";
+                
+                badge.innerText = "Dompet Firdaus";
+                title.innerText = "Halo, Firdaus Almubin!";
+                bannerSubtitle.innerText = "Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.";
+                
+                labelMetric1.innerText = "Sisa Jatah Makan Bulan Ini";
+                labelMetric2.innerText = "Total Pengeluaran Bulan Ini";
+
+                submitBtn.className = "w-full bg-[#B5E2FA] hover:brightness-95 text-[#2B2D42] font-bold py-3 rounded-xl text-sm transition-all shadow-md";
+                
+                expenseFormContainer.classList.remove('hidden');
+                setorTabunganContainer.classList.remove('hidden');
+                adminStatsCircleContainer.classList.add('hidden');
+                historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
+
+                if(pinguinPria) pinguinPria.classList.remove('hidden');
+                if(pinguinWanita) pinguinWanita.classList.add('hidden');
+                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
+
+            } else if (user === 'wanita') {
+                appBody.className = "theme-wanita min-h-screen pb-12 bg-slate-50 text-slate-800";
+                
+                btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-[#FFCAD4] text-[#4A4E69]";
+                btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
+                btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-500 hover:bg-slate-200 flex items-center gap-1";
+
+                bannerCard.className = "rounded-3xl p-6 shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#FDE2E4] to-[#FFCAD4] text-[#4A4E69]";
+                
+                badge.innerText = "Dompet Viranti";
+                title.innerText = "Halo, Viranti!";
+                bannerSubtitle.innerText = "Uang makan dibatasi Rp 1.500.000 / bulan. Catat pengeluaran harianmu dengan bijak.";
+                
+                labelMetric1.innerText = "Sisa Jatah Makan Bulan Ini";
+                labelMetric2.innerText = "Total Pengeluaran Bulan Ini";
+
+                submitBtn.className = "w-full bg-[#FFCAD4] hover:brightness-95 text-[#4A4E69] font-bold py-3 rounded-xl text-sm transition-all shadow-md";
+                
+                expenseFormContainer.classList.remove('hidden');
+                setorTabunganContainer.classList.remove('hidden');
+                adminStatsCircleContainer.classList.add('hidden');
+                historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-2";
+
+                if(pinguinPria) pinguinPria.classList.add('hidden');
+                if(pinguinWanita) pinguinWanita.classList.remove('hidden');
+                if(pinguinAdminPair) pinguinAdminPair.classList.add('hidden');
+
+            } else if (user === 'admin') {
+                appBody.className = "theme-admin min-h-screen pb-12 bg-slate-50 text-slate-800";
+
+                btnAdmin.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-slate-900 text-white flex items-center gap-1";
+                btnPria.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
+                btnWanita.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-200";
+
+                bannerCard.className = "rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white";
+
+                badge.innerText = "Akun Admin";
+                title.innerText = "AWIN SANG DEVELOPER";
+                bannerSubtitle.innerText = "Ringkasan Total Keuangan & Kontrol Penuh Data Firdaus & Viranti.";
+
+                labelMetric1.innerText = "Sisa Jatah Makan Total (Gabungan)";
+                labelMetric2.innerText = "Total Pengeluaran Berdua";
+
+                expenseFormContainer.classList.add('hidden');
+                setorTabunganContainer.classList.add('hidden');
+                adminStatsCircleContainer.classList.remove('hidden');
+                historyTableContainer.className = "bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 md:col-span-3";
+
+                if(pinguinPria) pinguinPria.classList.add('hidden');
+                if(pinguinWanita) pinguinWanita.classList.add('hidden');
+                if(pinguinAdminPair) pinguinAdminPair.classList.remove('hidden');
+            }
+
+            updateAvatarDisplay();
+            updateUI();
+        };
+
         // --- Firebase Listener Realtime ---
         const dbRef = ref(db, 'keuangan_nikah_data');
         onValue(dbRef, (snapshot) => {
@@ -415,6 +602,12 @@
 
         // --- Avatar Cloud Functions ---
         window.triggerAvatarUpload = function() {
+            currentUploadTarget = currentUser;
+            document.getElementById('avatarFileInput').click();
+        };
+
+        window.uploadSpecificAsset = function(targetKey) {
+            currentUploadTarget = targetKey;
             document.getElementById('avatarFileInput').click();
         };
 
@@ -427,11 +620,17 @@
                 return;
             }
 
+            const targetKey = currentUploadTarget || currentUser;
             const reader = new FileReader();
             reader.onload = function(evt) {
                 const base64Image = evt.target.result;
-                set(ref(db, `keuangan_nikah_data/avatars/${currentUser}`), base64Image);
-                showToastNotification("Foto Profil Diperbarui", "Foto tersimpan ke cloud untuk 3 device!", currentUser);
+                if (targetKey === 'bannerCustom') {
+                    set(ref(db, `keuangan_nikah_data/bannerCustom`), base64Image);
+                    showToastNotification("PNG Banner Diperbarui", "Banner custom tersimpan untuk 3 device!", currentUser);
+                } else {
+                    set(ref(db, `keuangan_nikah_data/avatars/${targetKey}`), base64Image);
+                    showToastNotification("Foto Profil Diperbarui", `Foto ${targetKey} tersimpan untuk 3 device!`, currentUser);
+                }
             };
             reader.readAsDataURL(file);
         };
@@ -779,6 +978,3 @@
     </script>
 </body>
 </html>
-```
-
-Seluruh kode aplikasi telah dimuat ulang secara utuh dan siap Anda salin ke repositori GitHub.
