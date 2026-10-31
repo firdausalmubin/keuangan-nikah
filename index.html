@@ -184,7 +184,7 @@
                     <h5 class="font-bold text-xs text-sky-400 mb-1 flex items-center gap-1.5">
                         ⚡ Admin Control (Realtime Cloud Storage Firebase)
                     </h5>
-                    <p class="text-[11px] text-slate-300 mb-3">Upload foto avatar & banner custom untuk masing-masing profil tanpa ImgBB!</p>
+                    <p class="text-[11px] text-slate-300 mb-3">Upload foto avatar, banner, & ikon target milestone untuk semua device tanpa ImgBB!</p>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         <button onclick="uploadSpecificAsset('pria')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl transition-all shadow-sm">
                             📷 Foto Profil Firdaus
@@ -205,14 +205,24 @@
                             🖼️ Banner AWIN (Wide)
                         </button>
                     </div>
-                </div>
-            </div>
 
-            <!-- Milestone List dengan Foto Custom -->
+                    <!-- Pilihan Ganti Foto Target / Milestone Nikah -->
+                    <div class="mt-3 pt-3 border-t border-slate-800">
+                        <p class="text-[11px] font-bold text-amber-400 mb-2">🎯 Ganti Foto Icon Target Milestone Nikah:</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+                            <button onclick="uploadSpecificAsset('msIcon5')" class="bg-amber-600 hover:bg-amber-500 text-white text-[10px] font-bold py-1.5 px-2 rounded-lg transition-all">
+                                🎯 Rp 5 Juta
+                            </button>
+                            <button onclick="uploadSpecificAsset('msIcon10')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-bold py-1.5 px-2 rounded-lg transition-all">
+                                🎯 Rp 10 Juta
+            <!-- Milestone List dengan Foto Custom (Langsung Bisa Klik Untuk Ganti) -->
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div id="ms-5" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
-                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-amber-100">
+                    <div class="relative group cursor-pointer w-12 h-12 rounded-full overflow-hidden mb-1 border-2 border-slate-200 shadow-sm flex items-center justify-center bg-amber-100" onclick="uploadSpecificAsset('msIcon5')" title="Klik untuk ganti ikon Rp 5 Juta">
                         <img id="msIcon-5" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d97706' stroke-width='2'><path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/></svg>" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white text-[9px] font-bold">Ganti</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-slate-700">Rp 5 Juta</h4>
@@ -221,8 +231,11 @@
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-10" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
-                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-sky-100">
+                    <div class="relative group cursor-pointer w-12 h-12 rounded-full overflow-hidden mb-1 border-2 border-slate-200 shadow-sm flex items-center justify-center bg-sky-100" onclick="uploadSpecificAsset('msIcon10')" title="Klik untuk ganti ikon Rp 10 Juta">
                         <img id="msIcon-10" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%230284c7' stroke-width='2'><path d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2'/><circle cx='7' cy='17' r='2'/><circle cx='17' cy='17' r='2'/></svg>" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white text-[9px] font-bold">Ganti</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-slate-700">Rp 10 Juta</h4>
@@ -231,8 +244,11 @@
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-20" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
-                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-rose-100">
+                    <div class="relative group cursor-pointer w-12 h-12 rounded-full overflow-hidden mb-1 border-2 border-slate-200 shadow-sm flex items-center justify-center bg-rose-100" onclick="uploadSpecificAsset('msIcon20')" title="Klik untuk ganti ikon Rp 20 Juta">
                         <img id="msIcon-20" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e11d48' stroke-width='2'><circle cx='12' cy='12' r='8'/><path d='M12 2v4'/></svg>" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white text-[9px] font-bold">Ganti</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-slate-700">Rp 20 Juta</h4>
@@ -241,8 +257,11 @@
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-30" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 flex flex-col items-center justify-between">
-                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-emerald-100">
+                    <div class="relative group cursor-pointer w-12 h-12 rounded-full overflow-hidden mb-1 border-2 border-slate-200 shadow-sm flex items-center justify-center bg-emerald-100" onclick="uploadSpecificAsset('msIcon30')" title="Klik untuk ganti ikon Rp 30 Juta">
                         <img id="msIcon-30" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2'><path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg>" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white text-[9px] font-bold">Ganti</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-slate-700">Rp 30 Juta (Min)</h4>
@@ -251,8 +270,11 @@
                     <span class="status-badge text-[10px] font-bold mt-2 inline-block px-2 py-0.5 rounded bg-slate-200 text-slate-600">Belum Tercapai</span>
                 </div>
                 <div id="ms-50" class="border rounded-2xl p-3 text-center transition-all bg-slate-50 border-slate-200 col-span-2 md:col-span-1 flex flex-col items-center justify-between">
-                    <div class="w-10 h-10 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-purple-100">
+                    <div class="relative group cursor-pointer w-12 h-12 rounded-full overflow-hidden mb-1 border-2 border-slate-200 shadow-sm flex items-center justify-center bg-purple-100" onclick="uploadSpecificAsset('msIcon50')" title="Klik untuk ganti ikon Rp 50 Juta">
                         <img id="msIcon-50" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239333ea' stroke-width='2'><path d='M12 2L15 9l7 1-5 5 1 7-6-3.5L6 22l1-7-5-5 7-1 3-7z'/></svg>" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white text-[9px] font-bold">Ganti</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-slate-700">Rp 50 Juta (Max)</h4>
